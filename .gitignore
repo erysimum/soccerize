@@ -1,0 +1,16 @@
+# ===== FRONTEND =====
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# ===== BACKEND =====
+__pycache__/
+*.pyc
+backend/.env
+
+# ===== GENERAL =====
+.vscode/
+.DS_Store
+*.log
+.env
+EOF
