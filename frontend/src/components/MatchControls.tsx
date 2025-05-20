@@ -54,7 +54,7 @@ export const MatchControls = ({ onSecondsUpdate, setIsRunning }: MatchControlsPr
 
   return (
     <div className="text-center space-y-4">
-      <h2 className="text-xl font-bold">⏱️ Match Time: {formatTime(seconds)}</h2>
+      <h2 className="text-xl font-bold">{'\u23F1\uFE0F'} Match Time: {formatTime(seconds)}</h2>
       <div className="flex gap-4 justify-center">
         <Button onClick={handleStart} disabled={isRunningLocal}>▶️ Start</Button>
         <Button onClick={handlePause} disabled={!isRunningLocal}>⏸️ Pause</Button>

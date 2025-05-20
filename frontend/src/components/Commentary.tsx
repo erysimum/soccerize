@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card"
 
 type Props = {
   currentSeconds: number
-  events: { type: "goal" | "card"; team: string; player?: string; cardType?: string }[]
+  events: { type: "goal" | "card"; selectedTeam?: string; player?: string; cardType?: string }[]
   isRunning: boolean
 }
 
@@ -44,8 +44,8 @@ export const Commentary = ({ currentSeconds, events, isRunning }: Props) => {
     const newComment: Comment = {
       message:
         lastEvent.type === "goal"
-          ? `GOAL! ${lastEvent.team} finds the net!`
-          : `${lastEvent.player} receives a ${lastEvent.cardType} card!`,
+          ? `GOAL! ${lastEvent.player} from ${lastEvent.selectedTeam} finds the net!`
+          : `${lastEvent.player} from ${lastEvent.selectedTeam} receives a ${lastEvent.cardType} card!`,
       time: secondsRef.current,
     }
 
@@ -58,7 +58,7 @@ export const Commentary = ({ currentSeconds, events, isRunning }: Props) => {
   return (
     <Card className="w-full max-w-md mx-auto mt-8 p-4">
       <CardContent>
-        <h2 className="text-2xl font-bold mb-4">🎙️ Commentary</h2>
+        <h2 className="text-2xl font-bold mb-4">{'\u{1F399}'}Commentary</h2>
         <div className="space-y-2 max-h-96 overflow-y-auto">
           {comments.length === 0 ? (
             <p className="italic text-muted-foreground">Waiting for kick-off…</p>

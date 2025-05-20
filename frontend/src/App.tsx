@@ -6,8 +6,8 @@ import { Scoreboard } from "./components/Scoreboard"
 import { TeamSelector } from "./components/TeamSelector"
 
 type MatchEvent =
-  | { type: "goal"; team: string }
-  | { type: "card"; team: string; player: string; cardType: string }
+  | { type: "goal"; selectedTeam: string; player: string }
+  | { type: "card"; selectedTeam: string; player: string; cardType: string }
 
 function App() {
   const [seconds, setSeconds] = useState(0)
@@ -34,34 +34,44 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-900 text-white flex flex-col items-center justify-center px-4">
-      <h1 className="text-4xl font-bold mb-6">⚽ Soccerize</h1>
+    <div className="min-h-screen bg-neutral-900 text-white flex justify-center">
+      <div className="w-full max-w-4xl px-4 py-10 space-y-10">
+        <h1 className="text-4xl font-bold text-center">{'\u{26BD}'} Soccerize</h1>
 
-      <MatchControls onSecondsUpdate={setSeconds} setIsRunning={setIsRunning} />
-      <Scoreboard
-        homeTeam={homeTeam}
-        awayTeam={awayTeam}
-        onEvent={handleEvent}
-        isRunning={isRunning}
-        events={events}
-      />
-      <Cards
-        currentSeconds={seconds}
-        onCardEvent={(player, type) =>
-          handleEvent({
-            type: "card",
-            team: "", // You can enhance this with player-team mapping
-            player,
-            cardType: type,
-          })
-        }
-        isRunning={isRunning}
-      />
-      <Commentary
-        currentSeconds={seconds}
-        events={events}
-        isRunning={isRunning}
-      />
+        <MatchControls
+          onSecondsUpdate={setSeconds}
+          setIsRunning={setIsRunning}
+        />
+
+        <Scoreboard
+          homeTeam={homeTeam}
+          awayTeam={awayTeam}
+          onEvent={handleEvent}
+          isRunning={isRunning}
+          events={events}
+        />
+
+        <Cards
+          currentSeconds={seconds}
+          homeTeam={homeTeam}
+          awayTeam={awayTeam}
+          onCardEvent={(player, type, selectedTeam) =>
+            handleEvent({
+              type: "card",
+              selectedTeam,
+              player,
+              cardType: type,
+            })
+          }
+          isRunning={isRunning}
+        />
+
+        <Commentary
+          currentSeconds={seconds}
+          events={events}
+          isRunning={isRunning}
+        />
+      </div>
     </div>
   )
 }

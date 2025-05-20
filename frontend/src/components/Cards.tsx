@@ -9,27 +9,44 @@ type PlayerCard = {
   name: string
   type: CardType
   time: number
+  selectedTeam: string
 }
 
 type Props = {
   currentSeconds: number
-  onCardEvent: (player: string, type: CardType) => void
+  homeTeam: string
+  awayTeam: string
+  onCardEvent: (player: string, type: CardType, selectedTeam: string) => void
   isRunning: boolean
 }
 
-export const Cards = ({ currentSeconds, onCardEvent, isRunning }: Props) => {
+export const Cards = ({ currentSeconds, homeTeam, awayTeam, onCardEvent, isRunning }: Props) => {
   const [playerName, setPlayerName] = useState("")
   const [cardType, setCardType] = useState<CardType>("Yellow")
+  const [selectedTeam, setSelectedTeam] = useState("")
   const [cards, setCards] = useState<PlayerCard[]>([])
 
   const handleAddCard = () => {
-    if (!playerName.trim()) return
-    const newCard = { name: playerName, type: cardType, time: currentSeconds }
+    if (!playerName.trim() || !selectedTeam) {
+      alert("Please enter a player name AND select a team!")
+      return
+    }
+
+    const newCard = {
+      name: playerName,
+      type: cardType,
+      time: currentSeconds,
+      selectedTeam: selectedTeam,
+    }
+
     setCards([...cards, newCard])
-    onCardEvent(playerName, cardType)
+    onCardEvent(playerName, cardType, selectedTeam)
+
     setPlayerName("")
     setCardType("Yellow")
+    setSelectedTeam("")
   }
+
 
   const formatTime = (secs: number) =>
     `${Math.floor(secs / 60)}' ${String(secs % 60).padStart(2, "0")}"`
@@ -37,7 +54,7 @@ export const Cards = ({ currentSeconds, onCardEvent, isRunning }: Props) => {
   return (
     <Card className="w-full max-w-md mx-auto mt-8 p-4">
       <CardContent>
-        <h2 className="text-2xl font-bold mb-4">🟥🟨 Cards</h2>
+        <h2 className="text-2xl font-bold mb-4">{'\u{1F7E5}'} {'\u{1F7E8}'} Cards</h2>
 
         <div className="flex flex-col space-y-3">
           <Input
@@ -48,6 +65,18 @@ export const Cards = ({ currentSeconds, onCardEvent, isRunning }: Props) => {
           />
           <select
             disabled={!isRunning}
+            value={selectedTeam}
+            onChange={(e) => setSelectedTeam(e.target.value)}
+            className="border rounded-md p-2 text-sm bg-background"
+          >
+            <option value="">Select Team</option>
+            <option value={homeTeam}>{homeTeam}</option>
+            <option value={awayTeam}>{awayTeam}</option>
+          </select>
+
+
+          <select
+            disabled={!isRunning}
             value={cardType}
             onChange={(e) => setCardType(e.target.value as CardType)}
             className="border rounded-md p-2 text-sm bg-background"
@@ -55,6 +84,8 @@ export const Cards = ({ currentSeconds, onCardEvent, isRunning }: Props) => {
             <option value="Yellow">🟨 Yellow</option>
             <option value="Red">🟥 Red</option>
           </select>
+
+
           <Button onClick={handleAddCard} disabled={!isRunning}>
             Add Card
           </Button>
@@ -64,12 +95,12 @@ export const Cards = ({ currentSeconds, onCardEvent, isRunning }: Props) => {
           {cards.map((card, index) => (
             <div
               key={index}
-              className={`flex justify-between p-2 rounded-md shadow ${
-                card.type === "Red" ? "bg-red-500 text-white" : "bg-yellow-400"
-              }`}
+              className={`flex justify-between p-2 rounded-md shadow ${card.type === "Red" ? "bg-red-500 text-white" : "bg-yellow-400"
+                }`}
             >
-              <span className="font-medium">{card.name}</span>
-              <span className="text-sm">
+              <span className="text-sm font-medium">
+                {card.name}{" "}
+                {card.selectedTeam}{" "}
                 {card.type} - {formatTime(card.time)}
               </span>
             </div>

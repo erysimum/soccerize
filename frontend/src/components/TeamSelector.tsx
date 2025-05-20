@@ -22,7 +22,7 @@ export const TeamSelector = ({ onTeamsSet }: Props) => {
 
   const handleStart = () => {
     if (home === away) {
-      setError("❌ Home and Away teams must be different!")
+      setError(" Home and Away teams must be different!")
       return
     }
     setError("")
@@ -35,7 +35,7 @@ export const TeamSelector = ({ onTeamsSet }: Props) => {
         <h2 className="text-2xl font-bold text-center mb-4">Select Teams</h2>
 
         <div className="space-y-2">
-          <Label>🏠 Home Team</Label>
+          <Label> {'\u{1F3E0}'}Home Team</Label>
           <select
             className="w-full p-2 rounded bg-neutral-700 text-white"
             value={home}
@@ -53,7 +53,7 @@ export const TeamSelector = ({ onTeamsSet }: Props) => {
         </div>
 
         <div className="space-y-2">
-          <Label>🛫 Away Team</Label>
+          <Label>{'\u2708\uFE0F'} Away Team</Label>
           <select
             className="w-full p-2 rounded bg-neutral-700 text-white"
             value={away}
@@ -79,7 +79,7 @@ export const TeamSelector = ({ onTeamsSet }: Props) => {
           onClick={handleStart}
           disabled={!home || !away}
         >
-          ✅ Start Match Setup
+          Start Match Setup
         </Button>
       </CardContent>
     </Card>
