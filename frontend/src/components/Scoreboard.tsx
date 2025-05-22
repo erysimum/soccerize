@@ -1,10 +1,12 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { postGoal } from "@/lib/api"
+
 
 type MatchEvent =
-  | { type: "goal"; selectedTeam: string; player: string }
-  | { type: "card"; selectedTeam: string; player: string; cardType: string }
+  | { type: "goal"; selectedTeam: string; player: string, second:number }
+  | { type: "card"; selectedTeam: string; player: string; cardType: string, second:number }
 
 type ScoreboardProps = {
   homeTeam: string
@@ -12,6 +14,7 @@ type ScoreboardProps = {
   onEvent: (event: MatchEvent) => void
   isRunning: boolean
   events: MatchEvent[]
+  currentSeconds:number
 }
 
 export const Scoreboard = ({
@@ -20,17 +23,32 @@ export const Scoreboard = ({
   onEvent,
   isRunning,
   events,
+  currentSeconds
 }: ScoreboardProps) => {
   const [homeScorer, setHomeScorer] = useState("")
   const [awayScorer, setAwayScorer] = useState("")
 
-  const handleGoal = (team: string, player: string) => {
+  const handleGoal = async (team: string, player: string,currentSeconds:number) => {
     if (!player.trim()) {
       alert("Please enter the goal scorer's name!")
       return
     }
 
-    onEvent({ type: "goal", selectedTeam: team, player })
+    try {
+      // fire the event locally to App
+      onEvent({ type: "goal", selectedTeam: team, player,second:currentSeconds })
+      //POST to backend
+      const result = await postGoal(team, player,currentSeconds)
+      console.log('Goal is saved', result.message)
+
+
+
+    } catch (error) {
+      console.error('Failed to send the Goal and GoalScorer to backend', error)
+      alert('Failed to record a Gaol,Try again Later')
+
+    }
+
   }
 
 
@@ -46,7 +64,7 @@ export const Scoreboard = ({
     <div className="flex flex-col items-center my-6 gap-6 w-full">
       {/* Heading */}
       <h2 className="text-2xl font-bold flex items-center gap-2">
-        <span>{'\u26BD'}</span> Goals
+        <span>{'\u26BD'} Goals</span>
       </h2>
 
       {/* Scoreline */}
@@ -65,7 +83,7 @@ export const Scoreboard = ({
           />
           <Button
             onClick={() => {
-              handleGoal(homeTeam, homeScorer)
+              handleGoal(homeTeam, homeScorer,currentSeconds)
               setHomeScorer("")
             }}
             disabled={!isRunning}
@@ -84,7 +102,7 @@ export const Scoreboard = ({
           />
           <Button
             onClick={() => {
-              handleGoal(awayTeam, awayScorer)
+              handleGoal(awayTeam, awayScorer,currentSeconds)
               setAwayScorer("")
             }}
             disabled={!isRunning}
@@ -107,7 +125,7 @@ export const Scoreboard = ({
               <span className="text-sm font-medium">
                 {goal.player}{" "}
                 <span>scored for</span>{" "}
-                {goal.selectedTeam}{" "}
+                {goal.selectedTeam}{" "}- at {goal.second}
 
               </span>
 

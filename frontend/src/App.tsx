@@ -6,8 +6,8 @@ import { Scoreboard } from "./components/Scoreboard"
 import { TeamSelector } from "./components/TeamSelector"
 
 type MatchEvent =
-  | { type: "goal"; selectedTeam: string; player: string }
-  | { type: "card"; selectedTeam: string; player: string; cardType: string }
+  | { type: "goal"; selectedTeam: string; player: string, second:number }
+  | { type: "card"; selectedTeam: string; player: string; cardType: string,second:number }
 
 function App() {
   const [seconds, setSeconds] = useState(0)
@@ -49,21 +49,24 @@ function App() {
           onEvent={handleEvent}
           isRunning={isRunning}
           events={events}
+          currentSeconds={seconds}
         />
 
         <Cards
           currentSeconds={seconds}
           homeTeam={homeTeam}
           awayTeam={awayTeam}
-          onCardEvent={(player, type, selectedTeam) =>
+          onCardEvent={(player, type, selectedTeam,currentSeconds) =>
             handleEvent({
               type: "card",
               selectedTeam,
               player,
               cardType: type,
+              second:currentSeconds
             })
           }
           isRunning={isRunning}
+          
         />
 
         <Commentary

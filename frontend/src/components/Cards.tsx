@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { postCard } from "@/lib/api"
 
 type CardType = "Yellow" | "Red"
 
@@ -16,8 +17,9 @@ type Props = {
   currentSeconds: number
   homeTeam: string
   awayTeam: string
-  onCardEvent: (player: string, type: CardType, selectedTeam: string) => void
+  onCardEvent: (player: string, type: CardType, selectedTeam: string,second:number) => void
   isRunning: boolean
+  
 }
 
 export const Cards = ({ currentSeconds, homeTeam, awayTeam, onCardEvent, isRunning }: Props) => {
@@ -26,7 +28,7 @@ export const Cards = ({ currentSeconds, homeTeam, awayTeam, onCardEvent, isRunni
   const [selectedTeam, setSelectedTeam] = useState("")
   const [cards, setCards] = useState<PlayerCard[]>([])
 
-  const handleAddCard = () => {
+  const handleAddCard = async () => {
     if (!playerName.trim() || !selectedTeam) {
       alert("Please enter a player name AND select a team!")
       return
@@ -40,7 +42,22 @@ export const Cards = ({ currentSeconds, homeTeam, awayTeam, onCardEvent, isRunni
     }
 
     setCards([...cards, newCard])
-    onCardEvent(playerName, cardType, selectedTeam)
+    try {
+      //fire the event locally to App
+      onCardEvent(playerName, cardType, selectedTeam,currentSeconds)
+      //making async call to database
+      const result = await postCard(selectedTeam,playerName,cardType,currentSeconds)
+      console.log('Card Saved', result.message)
+
+
+
+    }catch (error){
+      console.error("Can't send Card details", error)
+      alert('Failed to save Card details')
+
+    }
+    
+
 
     setPlayerName("")
     setCardType("Yellow")
