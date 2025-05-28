@@ -4,13 +4,26 @@ frontend/dist/
 frontend/.env
 
 # ===== BACKEND =====
-__pycache__/
-*.pyc
-backend/.env
+backend-node/node_modules/
+backend-node/.env
+
+
+# ===== LAMBDAS =====
+lambda-commentary/node_modules/
+lambda-commentary/.env
+lambda-websocket-connect/node_modules/
+lambda-websocket-disconnect/node_modules/
+
+# ===== INFRA =====
+infra-local/
+infrastructure/.terraform/
+infrastructure/terraform.tfstate*
+infrastructure/.terraform.lock.hcl
 
 # ===== GENERAL =====
 .vscode/
 .DS_Store
 *.log
 .env
-EOF
+*.zip
+*.bak

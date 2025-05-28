@@ -3,8 +3,15 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 
+const generateMatchId = (home: string, away: string): string => {
+  const shortHome = home.slice(0, 3).toLowerCase()
+  const shortAway = away.slice(0, 3).toLowerCase()
+  const randomNum = Math.floor(Math.random() * 900 + 100) // 100–999
+  return `${shortHome}_${shortAway}_${randomNum}`
+}
+
 type Props = {
-  onTeamsSet: (home: string, away: string) => void
+  onTeamsSet: (home: string, away: string,matchId :string ) => void
 }
 
 const leagueTeams = {
@@ -20,13 +27,15 @@ export const TeamSelector = ({ onTeamsSet }: Props) => {
   const [away, setAway] = useState("")
   const [error, setError] = useState("")
 
+  const matchId = generateMatchId(home, away)
+
   const handleStart = () => {
     if (home === away) {
       setError(" Home and Away teams must be different!")
       return
     }
     setError("")
-    onTeamsSet(home, away)
+    onTeamsSet(home, away,matchId)
   }
 
   return (

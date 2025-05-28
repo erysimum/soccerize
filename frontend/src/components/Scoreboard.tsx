@@ -15,6 +15,7 @@ type ScoreboardProps = {
   isRunning: boolean
   events: MatchEvent[]
   currentSeconds:number
+  matchId:string
 }
 
 export const Scoreboard = ({
@@ -23,7 +24,8 @@ export const Scoreboard = ({
   onEvent,
   isRunning,
   events,
-  currentSeconds
+  currentSeconds,
+  matchId
 }: ScoreboardProps) => {
   const [homeScorer, setHomeScorer] = useState("")
   const [awayScorer, setAwayScorer] = useState("")
@@ -38,7 +40,7 @@ export const Scoreboard = ({
       // fire the event locally to App
       onEvent({ type: "goal", selectedTeam: team, player,second:currentSeconds })
       //POST to backend
-      const result = await postGoal(team, player,currentSeconds)
+      const result = await postGoal(team, player,currentSeconds, matchId)
       console.log('Goal is saved', result.message)
 
 

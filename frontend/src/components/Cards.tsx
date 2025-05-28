@@ -19,10 +19,11 @@ type Props = {
   awayTeam: string
   onCardEvent: (player: string, type: CardType, selectedTeam: string,second:number) => void
   isRunning: boolean
+  matchId:string
   
 }
 
-export const Cards = ({ currentSeconds, homeTeam, awayTeam, onCardEvent, isRunning }: Props) => {
+export const Cards = ({ currentSeconds, homeTeam, awayTeam, onCardEvent, isRunning, matchId }: Props) => {
   const [playerName, setPlayerName] = useState("")
   const [cardType, setCardType] = useState<CardType>("Yellow")
   const [selectedTeam, setSelectedTeam] = useState("")
@@ -46,7 +47,7 @@ export const Cards = ({ currentSeconds, homeTeam, awayTeam, onCardEvent, isRunni
       //fire the event locally to App
       onCardEvent(playerName, cardType, selectedTeam,currentSeconds)
       //making async call to database
-      const result = await postCard(selectedTeam,playerName,cardType,currentSeconds)
+      const result = await postCard(selectedTeam,playerName,cardType,currentSeconds,matchId)
       console.log('Card Saved', result.message)
 
 

@@ -15,6 +15,7 @@ function App() {
   const [homeTeam, setHomeTeam] = useState("")
   const [awayTeam, setAwayTeam] = useState("")
   const [events, setEvents] = useState<MatchEvent[]>([])
+  const [matchId,setMatchId]= useState("")
 
   const handleEvent = (event: MatchEvent) => {
     if (isRunning) setEvents((prev) => [...prev, event])
@@ -24,9 +25,10 @@ function App() {
     return (
       <div className="min-h-screen bg-neutral-900 text-white flex items-center justify-center">
         <TeamSelector
-          onTeamsSet={(home, away) => {
+          onTeamsSet={(home, away,matchId) => {
             setHomeTeam(home)
             setAwayTeam(away)
+            setMatchId(matchId)
           }}
         />
       </div>
@@ -50,6 +52,7 @@ function App() {
           isRunning={isRunning}
           events={events}
           currentSeconds={seconds}
+          matchId={matchId}
         />
 
         <Cards
@@ -66,6 +69,7 @@ function App() {
             })
           }
           isRunning={isRunning}
+          matchId={matchId}
           
         />
 

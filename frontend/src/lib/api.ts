@@ -6,11 +6,11 @@ type GoalResponse = {
     message: string
 }
 
-export const postGoal = async (team: string, player: string,second:number): Promise<GoalResponse> => {
+export const postGoal = async (team: string, player: string,second:number, matchId:string): Promise<GoalResponse> => {
     const response = await fetch(`${API}/goal`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ matchId: 1, team, player,second }),
+        body: JSON.stringify({ type:'goal',matchId, team, player,second }),
     });
     if (!response.ok) {
         console.log("Error from Server")
@@ -30,12 +30,13 @@ export const postCard = async (
     team: string,
     player: string,
     card: string,
-    second:number
+    second:number,
+    matchId:string
 ): Promise<CardResponse> => {
     const response = await fetch(`${API}/card`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ matchId: 1, team, player, card ,second}),
+        body: JSON.stringify({ type:'card', matchId, team, player, card ,second}),
     });
     if (!response.ok) {
         throw new Error(`Server error: ${response.status}`)
