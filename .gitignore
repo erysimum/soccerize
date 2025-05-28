@@ -13,6 +13,14 @@ lambda-commentary/node_modules/
 lambda-commentary/.env
 lambda-websocket-connect/node_modules/
 lambda-websocket-disconnect/node_modules/
+lambda-functions/commentary/node_modules/
+lambda-functions/websockets/broadcast/node_modules/
+lambda-functions/websockets/connect/node_modules/
+lambda-functions/websockets/disconnect/node_modules/
+lambda-websocket-connect
+lambda-websocket-disconnect
+
+
 
 # ===== INFRA =====
 infra-local/
