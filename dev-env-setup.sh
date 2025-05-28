@@ -10,7 +10,7 @@ terraform apply -auto-approve
 echo " Extracting SQS and DynamoDB values from Terraform output..."
 SQS_URL=$(terraform output -raw sqs_queue_url)
 DYNAMO_TABLE=$(terraform output -raw dynamodb_table)
-WEBSOCKET_URL=$(terraform output -raw websocket_url)  # <--- NEW
+WEBSOCKET_URL=$(terraform output -raw websocket_url)  
 
 cd ..
 
@@ -22,12 +22,12 @@ EOF
 echo " backend-node/.env"
 cat backend-node/.env
 
-echo " Writing .env to lambda-commentary/"
-cat > lambda-commentary/.env <<EOF
-TABLE_NAME=$DYNAMO_TABLE
-EOF
-echo " lambda-commentary/.env"
-cat lambda-commentary/.env
+# echo " Writing .env to lambda-commentary/"
+# cat > lambda-commentary/.env <<EOF
+# TABLE_NAME=$DYNAMO_TABLE
+# EOF
+# echo " lambda-commentary/.env"
+# cat lambda-commentary/.env
 
 echo " Writing .env to frontend/"
 cat > frontend/.env <<EOF

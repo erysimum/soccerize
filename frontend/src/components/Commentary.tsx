@@ -25,7 +25,7 @@ export const Commentary = ({ currentSeconds, isRunning }: Props) => {
     socketRef.current = new WebSocket(socketUrl)
 
     socketRef.current.onopen = () => {
-      console.log("✅ WebSocket connected")
+      console.log(" WebSocket connected")
     }
 
     socketRef.current.onmessage = (event) => {
@@ -38,11 +38,11 @@ export const Commentary = ({ currentSeconds, isRunning }: Props) => {
     }
 
     socketRef.current.onerror = (err) => {
-      console.error("❌ WebSocket error", err)
+      console.error(" WebSocket error", err)
     }
 
     socketRef.current.onclose = () => {
-      console.log("🔌 WebSocket closed")
+      console.log(" WebSocket closed")
     }
 
     return () => {
