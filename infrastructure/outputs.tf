@@ -9,11 +9,11 @@ output "sqs_commentary_queue_arn" {
 
 ### DynamoDB Outputs
 output "dynamodb_commentary_table_name" {
-  value = module.dynamodb.dynamo.commentary_table_name
+  value = module.dynamodb.dynamodb_commentary_table_name
 }
 
 output "dynamodb_websocket_table_name" {
-  value = module.dynamodb.dynamo.websocket_connection_table_name
+  value = module.dynamodb.dynamodb_websocket_connection_table_name
 }
 
 ### Lambda Outputs
