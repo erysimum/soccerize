@@ -1,6 +1,6 @@
 resource "aws_lambda_function" "lambda_broadcast_stream" {
   function_name = "soccerize-broadcast-stream"
-  role          = aws_iam_role.lambda_broadcast_stream_role.arn
+  role          =  var.role_broadcast_lambda
 
   handler       = "index.handler"
   runtime       = "nodejs20.x"
@@ -11,16 +11,18 @@ resource "aws_lambda_function" "lambda_broadcast_stream" {
 
   environment {
     variables = {
-      CONNECTION_TABLE = aws_dynamodb_table.websocket_connection_table.name
-      ENDPOINT         = "https://${aws_apigatewayv2_api.soccerize_ws_api.id}.execute-api.${var.region}.amazonaws.com/${aws_apigatewayv2_stage.dev.name}"
+      CONNECTION_TABLE = var.websocket_table_name
+      ENDPOINT         = var.websocket_endpoint
     }
   }
-  depends_on = [aws_iam_role_policy_attachment.lambda_broadcast_stream_attach]
+ //depends_on = [var.role_broadcast_lambda]
+
 
 }
 
 resource "aws_lambda_event_source_mapping" "ddb_stream_trigger" {
-  event_source_arn  = aws_dynamodb_table.commentary_table.stream_arn
+  #event_source_arn  = aws_dynamodb_table.commentary_table.stream_arn##what goes here??
+  event_source_arn  = var.broadcast_stream
   function_name     = aws_lambda_function.lambda_broadcast_stream.arn
   starting_position = "LATEST"
   batch_size        = 1

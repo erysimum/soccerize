@@ -9,7 +9,8 @@ terraform apply -auto-approve
 
 echo " Extracting SQS and DynamoDB values from Terraform output..."
 SQS_URL=$(terraform output -raw sqs_queue_url)
-DYNAMO_TABLE=$(terraform output -raw dynamodb_table)
+DYNAMO_TABLE=$(terraform output -raw dynamodb_commentary_table_name)
+
 WEBSOCKET_URL=$(terraform output -raw websocket_url)  
 
 cd ..

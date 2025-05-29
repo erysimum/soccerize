@@ -23,7 +23,7 @@ resource "aws_iam_policy" "lambda_broadcast_stream_policy" {
         Sid: "WebSocketConnections",
         Effect: "Allow",
         Action: ["dynamodb:Scan", "dynamodb:DeleteItem"],
-        Resource: aws_dynamodb_table.websocket_connection_table.arn
+        Resource: var.websocket_table_arn
       },
       {
         Sid: "PushToWebSocket",
@@ -40,9 +40,21 @@ resource "aws_iam_policy" "lambda_broadcast_stream_policy" {
           "logs:PutLogEvents"
         ],
         Resource: "*"
+      },
+      {
+        Sid: "DynamoDBStreamAccess",
+        Effect: "Allow",
+        Action: [
+          "dynamodb:GetRecords",
+          "dynamodb:GetShardIterator",
+          "dynamodb:DescribeStream",
+          "dynamodb:ListStreams"
+        ],
+        Resource: var.broadcast_stream
       }
     ]
   })
+
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_broadcast_stream_attach" {

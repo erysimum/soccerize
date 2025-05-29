@@ -23,7 +23,7 @@ resource "aws_iam_policy" "lambda_ws_disconnect_policy" {
         Sid: "DeleteConnectionId",
         Effect: "Allow",
         Action: ["dynamodb:DeleteItem"],
-        Resource: aws_dynamodb_table.websocket_connection_table.arn
+        Resource: var.websocket_table_arn
       },
       {
         Sid: "CloudWatchLogs",

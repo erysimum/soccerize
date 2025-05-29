@@ -13,7 +13,11 @@ output "dynamodb_commentary_table_name" {
 }
 
 output "dynamodb_websocket_table_name" {
-  value = module.dynamodb.dynamodb_websocket_connection_table_name
+  value = module.dynamodb.dynamodb_websocket_table_name
+}
+
+output "commentary_table_stream_arn" {
+  value = module.dynamodb.commentary_table_stream_arn
 }
 
 ### Lambda Outputs

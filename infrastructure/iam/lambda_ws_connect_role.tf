@@ -23,7 +23,7 @@ resource "aws_iam_policy" "lambda_ws_connect_policy" {
         Sid: "PutConnectionId",
         Effect: "Allow",
         Action: ["dynamodb:PutItem"],
-        Resource: aws_dynamodb_table.websocket_connection_table.arn
+        Resource: var.websocket_table_arn
       },
       {
         Sid: "CloudWatchLogging",

@@ -32,7 +32,7 @@ resource "aws_iam_policy" "lambda_managed_policy" {
           "dynamodb:PutItem",
           "dynamodb:GetItem"
         ],
-        Resource = aws_dynamodb_table.commentary_table.arn
+        Resource = var.commentary_table_arn
       },
       {
         Sid    = "SQSAccess",
@@ -42,7 +42,7 @@ resource "aws_iam_policy" "lambda_managed_policy" {
           "sqs:DeleteMessage",
           "sqs:GetQueueAttributes"
         ],
-        Resource = aws_sqs_queue.commentary_queue.arn
+        Resource = var.commentary_queue_arn
       },
       {
         Sid    = "CloudWatchLogs",
