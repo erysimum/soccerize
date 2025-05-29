@@ -20,7 +20,10 @@ lambda-functions/websockets/disconnect/node_modules/
 lambda-websocket-connect
 lambda-websocket-disconnect
 
-
+#=====BOOTSTRAP ======
+bootstrap/.terraform
+bootstrap/.terraform.lock.hcl
+bootstrap/terraform.tfstate
 
 # ===== INFRA =====
 infra-local/

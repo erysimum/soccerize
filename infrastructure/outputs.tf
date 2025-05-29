@@ -1,69 +1,56 @@
-
-#SQS
+### SQS Outputs
 output "sqs_queue_url" {
-  value = aws_sqs_queue.commentary_queue.id
+  value = module.sqs.sqs_queue_url
 }
-# output "sqs_commentary_queue_url" {
-#   value = aws_sqs_queue.commentary_queue.url
-# }
 
 output "sqs_commentary_queue_arn" {
-  value = aws_sqs_queue.commentary_queue.arn
+  value = module.sqs.sqs_commentary_queue_arn
 }
 
-
-
-##DYNAMODB
+### DynamoDB Outputs
 output "dynamodb_commentary_table_name" {
-  value = aws_dynamodb_table.commentary_table.name
+  value = module.dynamodb.dynamo.commentary_table_name
 }
 
 output "dynamodb_websocket_table_name" {
-  value = aws_dynamodb_table.websocket_connection_table.name
+  value = module.dynamodb.dynamo.websocket_connection_table_name
 }
 
-#CLOUDWATCH LOGS
-
-output "log_group_name" {
-  value = "/aws/lambda/${aws_lambda_function.commentary_lambda.function_name}"
-}
-
-##LAMBDA ARN
+### Lambda Outputs
 output "lambda_commentary_arn" {
-  value = aws_lambda_function.commentary_lambda.arn
+  value = module.provisioning_lambda.lambda_commentary_arn
 }
 
 output "lambda_ws_connect_arn" {
-  value = aws_lambda_function.ws_connect.arn
+  value = module.provisioning_lambda.lambda_ws_connect_arn
 }
 
 output "lambda_ws_disconnect_arn" {
-  value = aws_lambda_function.ws_disconnect.arn
+  value = module.provisioning_lambda.lambda_ws_disconnect_arn
 }
 
 output "lambda_broadcast_stream_arn" {
-  value = aws_lambda_function.lambda_broadcast_stream.arn
+  value = module.provisioning_lambda.lambda_broadcast_stream_arn
 }
 
-#IAM ROLE ARN
+### IAM Role Outputs
 output "role_commentary_lambda" {
-  value = aws_iam_role.lambda_role.arn
+  value = module.iam.role_commentary_lambda
 }
 
 output "role_ws_connect_lambda" {
-  value = aws_iam_role.lambda_ws_connect_role.arn
+  value = module.iam.role_ws_connect_lambda
 }
 
 output "role_ws_disconnect_lambda" {
-  value = aws_iam_role.lambda_ws_disconnect_role.arn
+  value = module.iam.role_ws_disconnect_lambda
 }
 
 output "role_broadcast_lambda" {
-  value = aws_iam_role.lambda_broadcast_stream_role.arn
+  value = module.iam.role_broadcast_lambda
 }
 
-##WEBSOCKET URL
+### API Gateway Output
 output "websocket_url" {
-  value = "wss://${aws_apigatewayv2_api.soccerize_ws_api.id}.execute-api.${var.region}.amazonaws.com/${aws_apigatewayv2_stage.dev.name}"
-  description = "WebSocket connection URL for frontend"
+  value = module.api_gateway.websocket_url
 }

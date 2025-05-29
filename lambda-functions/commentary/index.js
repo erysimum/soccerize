@@ -50,7 +50,7 @@ export const handler = async (event) => {
 
       results.push({ status: "success", commentary });
     } catch (error) {
-      console.error("❗ Error processing record:", record, error);
+      console.error(" Error processing record:", record, error);
       results.push({ status: "error", error: error.message });
     }
   }
