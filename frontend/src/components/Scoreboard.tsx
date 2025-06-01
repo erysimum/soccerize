@@ -52,7 +52,8 @@ export const Scoreboard = ({
     }
 
   }
-
+  const formatTime = (s: number) =>
+  `${Math.floor(s / 60)}'${String(s % 60).padStart(2, '0')}"`;
 
   const homeScore = events.filter(
     (e) => e.type === "goal" && e.selectedTeam === homeTeam
@@ -127,7 +128,7 @@ export const Scoreboard = ({
               <span className="text-sm font-medium">
                 {goal.player}{" "}
                 <span>scored for</span>{" "}
-                {goal.selectedTeam}{" "}- at {goal.second}
+                {goal.selectedTeam}{" "}- at {formatTime(goal.second)}
 
               </span>
 

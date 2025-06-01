@@ -74,9 +74,7 @@ function App() {
         />
 
         <Commentary
-          currentSeconds={seconds}
-          // events={events}
-          isRunning={isRunning}
+        isRunning={isRunning}
         />
       </div>
     </div>

@@ -9,11 +9,6 @@ module "dynamodb" {
 
 module "iam" {
   source = "./iam"
-
-  # commentary_table_arn   = module.dynamodb.dynamodb_commentary_table_name
-  # websocket_table_arn    = module.dynamodb.dynamodb_websocket_table_name
-  # commentary_queue_arn   = module.sqs.sqs_commentary_queue_arn
-  # region                 = "us-east-1"
   commentary_table_arn   = module.dynamodb.commentary_table_arn
   websocket_table_arn    = module.dynamodb.websocket_table_arn
   commentary_queue_arn   = module.sqs.sqs_commentary_queue_arn
@@ -32,7 +27,8 @@ module "provisioning_lambda" {
   role_ws_connect_lambda     = module.iam.role_ws_connect_lambda
   role_ws_disconnect_lambda  = module.iam.role_ws_disconnect_lambda
   role_broadcast_lambda      = module.iam.role_broadcast_lambda
-  websocket_endpoint         = module.api_gateway.websocket_url
+  websocket_endpoint_for_lambda  = module.api_gateway.websocket_endpoint_for_lambda
+  websocket_url_for_frontend  = module.api_gateway.websocket_url_for_frontend
   region                     = "us-east-1"
 }
 

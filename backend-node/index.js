@@ -3,15 +3,21 @@ import express from "express"
 import cors from "cors"
 import dotenv from 'dotenv';
 dotenv.config(); 
-import { publishToQueue } from "./aws/publisherhelper";
+import { publishToQueue } from "./aws/publisherhelper.js";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get('/health', (_, res) => res.send('Node backend is healthy!'));
-app.post('/event', (req, res) => res.json({ status: 'Event received', data: req.body }));
-app.get('/commentary', (_, res) => res.json({ commentary: 'Goal! What a screamer from Messi!' }));
+app.get("/", (req, res) => {
+  res.json({
+    message: "Soccerize backend is running",
+    endpoints: ["/goal", "/card", "/reset"],
+    port: PORT
+  });
+});
+
+
 
 app.post('/goal',async (req, res) => {
     const { type, matchId, team, player, second } = req.body;

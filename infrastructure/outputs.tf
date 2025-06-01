@@ -55,6 +55,14 @@ output "role_broadcast_lambda" {
 }
 
 ### API Gateway Output
-output "websocket_url" {
-  value = module.api_gateway.websocket_url
+# output "websocket_url" {
+#   value = module.api_gateway.websocket_url
+# }
+
+output "websocket_url_for_frontend" {
+  value=module.api_gateway.websocket_url_for_frontend
+}
+
+output "websocket_endpoint_for_lambda" {
+  value=module.api_gateway.websocket_endpoint_for_lambda
 }

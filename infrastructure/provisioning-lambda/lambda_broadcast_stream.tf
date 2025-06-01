@@ -12,7 +12,7 @@ resource "aws_lambda_function" "lambda_broadcast_stream" {
   environment {
     variables = {
       CONNECTION_TABLE = var.websocket_table_name
-      ENDPOINT         = var.websocket_endpoint
+      ENDPOINT         = var.websocket_endpoint_for_lambda
     }
   }
  //depends_on = [var.role_broadcast_lambda]
@@ -21,7 +21,6 @@ resource "aws_lambda_function" "lambda_broadcast_stream" {
 }
 
 resource "aws_lambda_event_source_mapping" "ddb_stream_trigger" {
-  #event_source_arn  = aws_dynamodb_table.commentary_table.stream_arn##what goes here??
   event_source_arn  = var.broadcast_stream
   function_name     = aws_lambda_function.lambda_broadcast_stream.arn
   starting_position = "LATEST"

@@ -1,9 +1,9 @@
 #!/bin/bash
 
-echo " Switching to infrastructure directory..."
+echo " Infrastructure dir ..."
 cd infrastructure || { echo " Failed to cd into infrastructure"; exit 1; }
 
-echo " You are about to destroy all Terraform-managed AWS resources!"
+echo " Want to destroy all AWS Resources?"
 read -p "Are you sure? Type 'yes' to proceed: " confirm
 if [ "$confirm" != "yes" ]; then
   echo " Destroy cancelled."
@@ -13,5 +13,5 @@ fi
 echo " Running terraform destroy..."
 terraform destroy -auto-approve
 
-echo " All resources destroyed!"
+echo " ALL RESOURCES DESTROYED!!!"
 

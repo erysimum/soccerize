@@ -2,6 +2,9 @@
 frontend/node_modules/
 frontend/dist/
 frontend/.env
+frontend/.vite/
+frontend/coverage/
+frontend/.next/
 
 # ===== BACKEND =====
 backend-node/node_modules/
@@ -9,27 +12,23 @@ backend-node/.env
 
 
 # ===== LAMBDAS =====
-lambda-commentary/node_modules/
-lambda-commentary/.env
-lambda-websocket-connect/node_modules/
-lambda-websocket-disconnect/node_modules/
-lambda-functions/commentary/node_modules/
-lambda-functions/websockets/broadcast/node_modules/
-lambda-functions/websockets/connect/node_modules/
-lambda-functions/websockets/disconnect/node_modules/
-lambda-websocket-connect
-lambda-websocket-disconnect
+
+lambda-functions/**/node_modules/
+lambda-functions/**/lambda.zip 
+
 
 #=====BOOTSTRAP ======
 bootstrap/.terraform
 bootstrap/.terraform.lock.hcl
 bootstrap/terraform.tfstate
+bootstrap/terraform.tfvars
 
 # ===== INFRA =====
-infra-local/
+
 infrastructure/.terraform/
 infrastructure/terraform.tfstate*
 infrastructure/.terraform.lock.hcl
+infrastructure/terraform.tfvars
 
 # ===== GENERAL =====
 .vscode/
@@ -38,3 +37,4 @@ infrastructure/.terraform.lock.hcl
 .env
 *.zip
 *.bak
+.env

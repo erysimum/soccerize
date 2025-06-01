@@ -1,17 +1,16 @@
 #!/bin/bash
 
-echo " Switching to infrastructure directory..."
+echo " Switching infrastructure dir..."
 cd infrastructure || exit 1
 
 echo " Running terraform init + apply..."
 terraform init -upgrade
 terraform apply -auto-approve
 
-echo " Extracting SQS and DynamoDB values from Terraform output..."
+echo " Extracting SQS ,DynamoDB, and WebSocket (for frontend) values from Terraform's main output..."
 SQS_URL=$(terraform output -raw sqs_queue_url)
 DYNAMO_TABLE=$(terraform output -raw dynamodb_commentary_table_name)
-
-WEBSOCKET_URL=$(terraform output -raw websocket_url)  
+WEBSOCKET_URL=$(terraform output -raw websocket_url_for_frontend)  
 
 cd ..
 

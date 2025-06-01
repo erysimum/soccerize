@@ -2,21 +2,18 @@ import { useEffect, useRef, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 
 type Props = {
-  currentSeconds: number
-  isRunning: boolean
+ isRunning: boolean
 }
 
 type Comment = {
   message: string
-  time: number
-}
+ }
 
-export const Commentary = ({ currentSeconds, isRunning }: Props) => {
+export const Commentary = ({ isRunning }: Props) => {
   const [comments, setComments] = useState<Comment[]>([])
   const socketRef = useRef<WebSocket | null>(null)
 
-  const formatTime = (secs: number) =>
-    `${Math.floor(secs / 60)}' ${String(secs % 60).padStart(2, "0")}"`
+  
 
   useEffect(() => {
     if (!isRunning) return
@@ -32,7 +29,7 @@ export const Commentary = ({ currentSeconds, isRunning }: Props) => {
       const data = JSON.parse(event.data)
       const newComment: Comment = {
         message: data.commentary,
-        time: currentSeconds
+        // time: currentSeconds
       }
       setComments((prev) => [...prev, newComment])
     }
@@ -60,7 +57,6 @@ export const Commentary = ({ currentSeconds, isRunning }: Props) => {
           ) : (
             comments.map((c, i) => (
               <div key={i} className="text-sm text-muted-foreground border-l-4 border-neutral-500 pl-3">
-                <span className="text-white font-semibold">{formatTime(c.time)}</span>
                 <span className="ml-2">{c.message}</span>
               </div>
             ))
