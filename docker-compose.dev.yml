@@ -1,0 +1,29 @@
+# version: "3.8"#no need coz we're using docker-compose-v2
+
+services:
+  backend-node: #hostname in Docker network
+    build:
+      context: ./backend-node
+    container_name: backend-node  
+   
+    # ports:
+    #   - "5000:5000"
+    env_file:
+      - ./backend-node/.env
+    networks:
+      - soccerize-net
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+     
+    ports:
+      - "3000:80"  #let's expose frontend only, keep backend hidden
+    depends_on:
+      - backend-node
+    networks:
+      - soccerize-net
+
+networks:
+  soccerize-net:

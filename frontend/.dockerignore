@@ -1,0 +1,16 @@
+# No need of  node_modules and build artifacts
+node_modules
+dist
+
+# No need of dotenvs and sensitive files
+.env
+.env.*   # all env variants (e.g., .env.dev, .env.prod)
+
+# Ignore config, logs, cache
+*.log
+.vscode
+.idea
+
+# Ignore git stuff
+.git
+.gitignore

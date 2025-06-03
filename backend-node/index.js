@@ -5,6 +5,8 @@ import dotenv from 'dotenv';
 dotenv.config(); 
 import { publishToQueue } from "./aws/publisherhelper.js";
 
+console.log("ENV CHECK...:", process.env.AWS_ACCESS_KEY_ID, process.env.AWS_REGION);
+
 const app = express();
 app.use(cors());
 app.use(express.json());

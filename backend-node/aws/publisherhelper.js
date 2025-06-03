@@ -2,9 +2,9 @@ import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
 import dotenv from "dotenv";
 dotenv.config();
 
-const REGION = "us-east-1"; // change if needed
+//const REGION = "us-east-1"; // change if needed
 
-const client = new SQSClient({ region: REGION });
+const client = new SQSClient({ region: process.env.AWS_REGION });
 const QUEUE_URL = process.env.SQS_QUEUE_URL;
 
 export const publishToQueue= async (payload)=> {
