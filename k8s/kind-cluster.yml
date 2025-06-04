@@ -1,0 +1,21 @@
+# k8s/kind-cluster.yml
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: soccerize-cicd-cluster
+
+nodes:
+  - role: control-plane
+    image: kindest/node:v1.31.2
+    extraPortMappings:
+      - containerPort: 80
+        hostPort: 3000
+        protocol: TCP
+      - containerPort: 443
+        hostPort: 3001
+        protocol: TCP
+
+  - role: worker  #   for frontend
+    image: kindest/node:v1.31.2
+
+  - role: worker  #  for backend-node
+    image: kindest/node:v1.31.2
