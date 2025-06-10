@@ -1,9 +1,7 @@
 # Soccerize Football App
-Soccerize Football is fullstack, event driven real time football simulation app supporting real-time  goals, cards (yellow or red), and commentary powered by AWS services- Simple Queue Service(SQS), Lambda, DynamoDB, DynamoDB Stream, WebSocket APIs, along with Express Server and React with Vite.
+Soccerize Football is full-stack, event-driven real-time football simulation app supporting real-time  goals, cards (yellow or red), and commentary powered by AWS services- Simple Queue Service(SQS), Lambda, DynamoDB, DynamoDB Stream, WebSocket APIs, along with Express Server and React with Vite.
 
-#
-Soccerize Football 
-#
+
 
  ### In this demo, we will see how to deploy an end to end three tier soccerize application on KIND cluster.
 
@@ -20,7 +18,7 @@ Frontend (React + WebSocket) <---> Backend Node API <---> AWS SQS Queue
 ### Folder Structure
 | Folders        |    Description |
 | frontend/      |    React app using Vite. Live UI action for goals ,cards and commentary |
-| backend-node/  |    Express API server handling  goals, cards, and reset logic |
+| backend-node/  |    Express API server handling  API routes and bridging events to AWS  |
 | lambda-functions/ | Lambda function encapsulates all the business logic |
 | infrastructure/  |  Terraform code provisioning all AWS resources |
 | bootstrap/       |  Terraform backend and remote state setup    |
@@ -32,6 +30,7 @@ Frontend (React + WebSocket) <---> Backend Node API <---> AWS SQS Queue
    -AWS CLI Configured
    -Terraform Installed
    -Node.js
+   -Docker and Dockerhub account
 
 ### Getting Started
   Run the script dev-env-setup.sh
