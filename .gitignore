@@ -1,10 +1,13 @@
 # ===== FRONTEND =====
 frontend/node_modules/
 frontend/dist/
-frontend/.env
+frontend/.env*
 frontend/.vite/
 frontend/coverage/
 frontend/.next/
+
+#commit this env example
+!frontend/.env.dev.example
 
 # ===== BACKEND =====
 backend-node/node_modules/
@@ -30,6 +33,10 @@ infrastructure/terraform.tfstate*
 infrastructure/.terraform.lock.hcl
 infrastructure/terraform.tfvars
 
+# ==== ENV ====
+scripts/dockerhubcreds.env
+k8s/dev/secrets/
+
 # ===== GENERAL =====
 .vscode/
 .DS_Store
@@ -38,3 +45,4 @@ infrastructure/terraform.tfvars
 *.zip
 *.bak
 .env
+*.env

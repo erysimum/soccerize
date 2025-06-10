@@ -4,8 +4,9 @@ import cors from "cors"
 import dotenv from 'dotenv';
 dotenv.config(); 
 import { publishToQueue } from "./aws/publisherhelper.js";
+const PORT = process.env.PORT || 5000;
 
-console.log("ENV CHECK...:", process.env.AWS_ACCESS_KEY_ID, process.env.AWS_REGION);
+console.log("ENV CHECK...:", process.env.AWS_ACCESS_KEY_ID, process.env.AWS_SECRET_ACCESS_KEY,process.env.AWS_REGION);
 
 const app = express();
 app.use(cors());
@@ -51,6 +52,9 @@ app.post('/reset', (req, res) => {
     res.status(200).json({ message: "Match reset!" });
 });
 
+app.get('/health', (_, res) => {
+  res.status(200).send('Healthy');
+});
 
-const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, '0.0.0.0', () => console.log(`Node backend running on port ${PORT}`));

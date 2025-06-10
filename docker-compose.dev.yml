@@ -4,7 +4,7 @@ services:
   backend-node: #hostname in Docker network
     build:
       context: ./backend-node
-    container_name: backend-node  
+    # container_name: backend-node  
    
     # ports:
     #   - "5000:5000"
@@ -16,7 +16,7 @@ services:
   frontend:
     build:
       context: ./frontend
-    container_name: frontend
+    # container_name: frontend
      
     ports:
       - "3000:80"  #let's expose frontend only, keep backend hidden

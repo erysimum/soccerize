@@ -1,0 +1,39 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: soccerize-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: erysimum/soccerize-frontend:v1.0.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "300m"
+              memory: "256Mi"  
+          volumeMounts:
+            - name: env-volume
+              mountPath: /usr/share/nginx/html/config/env.js
+              subPath: env.js
+      volumes:
+        - name: env-volume
+          configMap:
+            name: frontend-env
+          
+         

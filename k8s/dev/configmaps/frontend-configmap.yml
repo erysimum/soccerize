@@ -1,0 +1,12 @@
+# k8s/configmaps/frontend-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-env
+  namespace: soccerize-app
+data:
+  env.js: |
+    window.env = {
+      VITE_SOCKET_URL: "wss://3pdd09eo34.execute-api.us-east-1.amazonaws.com/dev",
+      VITE_API_BASE_URL: "/api"
+    };

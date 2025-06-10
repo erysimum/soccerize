@@ -2,24 +2,29 @@ import { useEffect, useRef, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 
 type Props = {
- isRunning: boolean
+  isRunning: boolean
 }
 
 type Comment = {
   message: string
- }
+}
 
 export const Commentary = ({ isRunning }: Props) => {
   const [comments, setComments] = useState<Comment[]>([])
   const socketRef = useRef<WebSocket | null>(null)
 
-  
+
 
   useEffect(() => {
     if (!isRunning) return
 
-    const socketUrl = import.meta.env.VITE_SOCKET_URL
-    socketRef.current = new WebSocket(socketUrl)
+    //const socketUrl = import.meta.env.VITE_SOCKET_URL->used in docker-compose
+    const socketUrl = window.env?.VITE_SOCKET_URL
+    if (!socketUrl) {
+      console.warn("WebSocket URL is undefined");
+      return;
+    }
+    socketRef.current = new WebSocket(socketUrl);
 
     socketRef.current.onopen = () => {
       console.log(" WebSocket connected")
