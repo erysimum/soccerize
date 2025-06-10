@@ -2,7 +2,6 @@
 Soccerize Football is fullstack, event driven real time football simulation app supporting real-time  goals, cards (yellow or red), and commentary powered by AWS services- Simple Queue Service(SQS), Lambda, DynamoDB, DynamoDB Stream, WebSocket APIs, along with Express Server and React with Vite.
 
 #
-
 Soccerize Football 
 #
 
@@ -19,20 +18,20 @@ Frontend (React + WebSocket) <---> Backend Node API <---> AWS SQS Queue
 
 
 ### Folder Structure
-Folders            Description
-frontend/          React app using Vite. Live UI action for goals ,cards and commentary
-backend-node/      Express API server handling  goals, cards, and reset logic
-lambda-functions/  Lambda function encapsulates all the business logic 
-infrastructure/    Terraform code provisioning all AWS resources
-bootstrap/         Terraform backend and remote state setup    
-dev-env-setup.sh   Set the infrastructure up and extract the env variables
+| Folders        |    Description |
+| frontend/      |    React app using Vite. Live UI action for goals ,cards and commentary |
+| backend-node/  |    Express API server handling  goals, cards, and reset logic |
+| lambda-functions/ | Lambda function encapsulates all the business logic |
+| infrastructure/  |  Terraform code provisioning all AWS resources |
+| bootstrap/       |  Terraform backend and remote state setup    |
+| dev-env-setup.sh |  Set the infrastructure up and extract the env variables |
 
 
 ### Setup Instruction
 ### Prerequites-
-   AWS CLI Configured
-   Terraform Installed
-   Node.js
+   -AWS CLI Configured
+   -Terraform Installed
+   -Node.js
 
 ### Getting Started
   Run the script dev-env-setup.sh
@@ -102,27 +101,27 @@ dev-env-setup.sh   Set the infrastructure up and extract the env variables
 ### Logs:
    All logs are logged in CloudWatch for debugging     
 
-### Install Kind
-- <b> ./install_kind.sh
+### Install KIND and Kubectl
+ ./install_kind.sh
 
 ### Create Cluster
-- <b> ./k8s/kind_cluster.yml
+ ./k8s/kind_cluster.yml
 
 #
-- Verify Nodes
+# Verify Nodes
 ```bash
 kubectl get nodes -o wide
 ```
 
 #
-- Label Nodes
+# Label Nodes
 ```bash
 kubectl label node soccerize-cicd-cluster-worker frontend-node=true
 kubectl label node soccerize-cicd-cluster-worker2 backend-node=true
 ```
 
 #
-- Taint backend-node
+# Taint backend-node
 ```bash
 kubectl taint nodes soccerize-cicd-cluster-worker2 backend-only=true:NoSchedule
 ```
@@ -159,9 +158,9 @@ kubectl get svc -n ingress-nginx
 ```
 
 ### Build, Tag and Push images to dockerhub
-- <b> ./scripts/docker-compose-build-push.sh
+ ./scripts/docker-compose-build-push.sh
 
-# Apply
+# Apply Kubernetes Manifests
 ```bash
 kubectl apply -f ./k8s/dev/secrets/. -n soccerize-app
 kubectl apply -f ./k8s/dev/configmaps/. -n soccerize-app
