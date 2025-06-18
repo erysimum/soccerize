@@ -46,3 +46,5 @@ k8s/dev/secrets/
 *.bak
 .env
 *.env
+terra-key
+terra-key.pub
