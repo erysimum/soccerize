@@ -102,12 +102,6 @@ resource "aws_instance" "bastion" {
   vpc_security_group_ids = [aws_security_group.bastion_sg.id]#instance can have more than one SG
   key_name               = aws_key_pair.terra_key.key_name
 
-  user_data   = <<-EOF
-              #!/bin/bash
-              apt update
-              apt install -y jq
-              EOF
-
   root_block_device {
     volume_size = 30
     volume_type = "gp2"
