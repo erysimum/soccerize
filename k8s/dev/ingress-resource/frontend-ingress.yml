@@ -3,10 +3,17 @@ kind: Ingress
 metadata:
   name: soccerize-frontend-ingress
   namespace: soccerize-app
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/group.name: soccerize
+    alb.ingress.kubernetes.io/group.order: "1"
+    alb.ingress.kubernetes.io/subnets: subnet-04560c24b54c1baa2,subnet-070f7567f83a21664
+    alb.ingress.kubernetes.io/target-type: ip
 spec:
+  ingressClassName: alb
   rules:
-    - host: soccerize.local
-      http:
+    - http:
         paths:
           - path: /config/
             pathType: Prefix

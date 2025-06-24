@@ -6,7 +6,7 @@ resource "aws_key_pair" "terra_key" {
 resource "aws_security_group" "bastion_sg" {
   name        = "bastion-sg"
   description = "Allow SSH, HTTP, HTTPS, and custom ports"
-  vpc_id      = var.vpc_id
+  vpc_id      = var.my_vpc_id
 
   ingress {
     description = "SSH"
@@ -72,23 +72,34 @@ resource "aws_security_group" "bastion_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    description = "Backend Port"
+    from_port   = 5000
+    to_port     = 5000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+
   egress {
     from_port   = 0
     to_port     = 0
-    protocol    = "-1"
+    protocol    = "-1"#all protocol
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
-    Name = "bastion-sg"
+    Name = "bastion-sg-tag"
   }
 }
 
 resource "aws_instance" "bastion" {
+  associate_public_ip_address = true
+
   ami                    = var.ami_id
   instance_type          = var.instance_type
-  subnet_id              = var.public_subnet_id
-  vpc_security_group_ids = [aws_security_group.bastion_sg.id]
+  subnet_id              = var.my_subnet_id#in which subnet this bastion is launching
+  vpc_security_group_ids = [aws_security_group.bastion_sg.id]#instance can have more than one SG
   key_name               = aws_key_pair.terra_key.key_name
 
   root_block_device {
@@ -97,6 +108,6 @@ resource "aws_instance" "bastion" {
   }
 
   tags = {
-    Name = "soccerize-bastion"
+    Name = "soccerize-bastion-instance-tag"
   }
 }

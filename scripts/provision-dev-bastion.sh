@@ -8,7 +8,7 @@ cd "$(dirname "$0")/../infrastructure/envs/dev"
 echo " Initializing Terraform to provision EC2 as bastion host"
 terraform init -upgrade
 
-echo " Applying infrastructure ion AWS"
+echo " Applying infrastructure on AWS"
 terraform apply -auto-approve
 
 echo " Infra provisioned! Fetching outputs..."

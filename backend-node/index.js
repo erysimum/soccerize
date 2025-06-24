@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
 
 
 
-app.post('/goal',async (req, res) => {
+app.post('/api/goal',async (req, res) => {
     const { type, matchId, team, player, second } = req.body;
     console.log(`GOAL for ${team} by ${player} in match ${matchId} at ${second}`);
     
@@ -34,7 +34,7 @@ app.post('/goal',async (req, res) => {
     }
 });
 
-app.post("/card", async (req, res) => {
+app.post("/api/card", async (req, res) => {
   const { type, matchId, team, player, card, second } = req.body;
 
   console.log(`CARD for ${player} (${team}) - ${card} at ${second} in match ${matchId}`);
@@ -47,12 +47,12 @@ app.post("/card", async (req, res) => {
   }
 });
 
-app.post('/reset', (req, res) => {
+app.post('/api/reset', (req, res) => {
     console.log("Match reset.");
     res.status(200).json({ message: "Match reset!" });
 });
 
-app.get('/health', (_, res) => {
+app.get('/api/health', (_, res) => {
   res.status(200).send('Healthy');
 });
 

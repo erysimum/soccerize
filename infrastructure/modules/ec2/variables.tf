@@ -6,7 +6,7 @@ variable "instance_name" {
 variable "instance_type" {
   description = "EC2 instance type"
   type        = string
-  default     = "t3.large"
+  default     = "t2.micro"
 }
 
 variable "ami_id" {
@@ -24,12 +24,12 @@ variable "public_key_path" {
   type        = string
 }
 
-variable "vpc_id" {
+variable "my_vpc_id" {
   description = "VPC ID where the instance will be launched"
   type        = string
 }
 
-variable "subnet_id" {
+variable "my_subnet_id" {
   description = "Public subnet ID for launching EC2"
   type        = string
 }
@@ -37,5 +37,7 @@ variable "subnet_id" {
 variable "ingress_ports" {
   description = "List of ingress ports to allow"
   type        = list(number)
-  default     = [22, 80, 443, 30000, 32767, 465, 9000, 3000, 6443, 25]
+  default     = [22, 80, 443, 30000, 32767, 465, 9000, 3000, 5000,6443, 25]
 }
+
+
