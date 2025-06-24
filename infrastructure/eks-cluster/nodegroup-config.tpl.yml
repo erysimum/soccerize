@@ -1,0 +1,23 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: soccer
+  region: us-east-1
+
+managedNodeGroups:
+  - name: soccer-ng
+    instanceType: t3.medium
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 2
+    volumeSize: 20
+    privateNetworking: true
+    subnets:
+      - ${subnet_a}
+      - ${subnet_b}
+    ssh:
+      allow: true
+      publicKeyName: ${ssh_key_name}
+    updateConfig:
+      maxUnavailable: 1

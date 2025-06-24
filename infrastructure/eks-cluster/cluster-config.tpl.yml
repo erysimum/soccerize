@@ -1,0 +1,22 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: soccer
+  region: us-east-1
+  version: "1.33"
+
+vpc:
+  id: ${vpc_id}
+  subnets:
+    private:
+      us-east-1a:
+        id: ${subnet_a}
+      us-east-1b:
+        id: ${subnet_b}
+
+  clusterEndpoints:
+    publicAccess: true
+    privateAccess: true
+
+managedNodeGroups: []
