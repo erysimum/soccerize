@@ -20,3 +20,6 @@ output "security_group_ids"{
  value = module.ec2.security_group_ids
 }
 
+output "key_pair_name" {
+  value = module.ec2.key_pair_name
+}
