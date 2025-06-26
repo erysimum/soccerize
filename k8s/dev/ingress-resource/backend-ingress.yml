@@ -7,7 +7,7 @@ metadata:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
     alb.ingress.kubernetes.io/group.name: soccerize
-    alb.ingress.kubernetes.io/subnets: subnet-04560c24b54c1baa2,subnet-070f7567f83a21664
+    alb.ingress.kubernetes.io/subnets: subnet-0ab41c3ea203ba7e1,subnet-07e1f616b1024991c
     alb.ingress.kubernetes.io/target-type: ip
 spec:
   ingressClassName: alb
