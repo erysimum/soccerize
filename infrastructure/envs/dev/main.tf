@@ -22,18 +22,18 @@ module "vpc" {
 
   public_subnet_tags = {
     "kubernetes.io/role/elb" = "1"
-    "kubernetes.io/cluster/soccerize-eks" = "owned"
+    "kubernetes.io/cluster/soccer" = "owned"
   }
 
   private_subnet_tags = {
     "kubernetes.io/role/internal-elb" = "1"
-    "kubernetes.io/cluster/soccerize-eks" = "owned"
+    "kubernetes.io/cluster/soccer" = "owned"
   }
 }
 module "ec2" {
   source           = "../../modules/ec2"
   instance_name    = "soccerize-bastion"
-  instance_type    = "t2.micro"
+  instance_type    = "t3.large"
   ami_id           = "ami-020cba7c55df1f615" 
   key_name         = "terra-key"
   public_key_path = "${path.module}/../../../terra-key.pub"
