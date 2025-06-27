@@ -17,7 +17,8 @@ pipeline {
 
         stage("Git: Checkout eks-deploy") {
             steps {
-                code_checkout("https://gitlab.com/serverlessprojectgroup/soccerize.git", "eks-deploy")
+                code_checkout("git@gitlab.com:serverlessprojectgroup/soccerize.git", "eks-deploy")
+
             }
         }
 
@@ -41,19 +42,20 @@ pipeline {
             }
         }
 
-        stage("Git: Commit and Push") {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'gitlab-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
-                    sh '''
-                    git config user.email "ci@soccerize.com"
-                    git config user.name "soccerize-ci-bot"
-                    git add k8s/dev/*.yml
-                    git commit -m "chore: updated docker tags - FE:${FRONTEND_DOCKER_TAG}, BE:${BACKEND_DOCKER_TAG}" || echo "No changes to commit"
-                    git push https://$GIT_USER:$GIT_PASS@gitlab.com/serverlessprojectgroup/soccerize.git HEAD:eks-deploy
-                    '''
-                }
-            }
+      stage("Git: Commit and Push") {
+    steps {
+        sshagent(['gitlab-ssh']) {
+            sh '''
+            git config user.email "ci@soccerize.com"
+            git config user.name "soccerize-ci-bot"
+            git add k8s/dev/*.yml
+            git commit -m "chore: updated docker tags - FE:${FRONTEND_DOCKER_TAG}, BE:${BACKEND_DOCKER_TAG}" || echo "No changes to commit"
+            git push git@gitlab.com:serverlessprojectgroup/soccerize.git HEAD:eks-deploy
+            '''
         }
+    }
+}
+
     }
 
     post {
