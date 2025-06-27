@@ -43,7 +43,7 @@ pipeline {
 
         stage("Git: Commit and Push") {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'gitlab-cred', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+                withCredentials([usernamePassword(credentialsId: 'gitlab-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
                     sh '''
                     git config user.email "ci@soccerize.com"
                     git config user.name "soccerize-ci-bot"
