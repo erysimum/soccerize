@@ -16,8 +16,8 @@ pipeline {
         stage("Validate Parameters") {
             steps {
                 script {
-                    if (params.FRONTEND_DOCKER_TAG == '' || params.BACKEND_DOCKER_TAG == '') {
-                        error("FRONTEND_DOCKER_TAG and BACKEND_DOCKER_TAG must be provided.")
+                    if (!params.FRONTEND_DOCKER_TAG?.trim() || !params.BACKEND_DOCKER_TAG?.trim()) {
+                        error("Both FRONTEND_DOCKER_TAG and BACKEND_DOCKER_TAG must be provided.")
                     }
                 }
             }
@@ -43,6 +43,7 @@ pipeline {
             }
         }
 
+        // Uncomment this stage if OWASP Dependency Check is needed
         // stage("OWASP: Dependency Check") {
         //     steps {
         //         owasp_dependency()
@@ -61,16 +62,14 @@ pipeline {
             }
         }
 
-       
-
         stage("Docker Build: Backend & Frontend") {
             steps {
                 script {
                     dir('backend-node') {
-                        docker_build("soccerize-backend-node", "${params.BACKEND_DOCKER_TAG}", "erysimum")
+                        docker_build("soccerize-backend-node", params.BACKEND_DOCKER_TAG, "erysimum")
                     }
                     dir('frontend') {
-                        docker_build("soccerize-frontend", "${params.FRONTEND_DOCKER_TAG}", "erysimum")
+                        docker_build("soccerize-frontend", params.FRONTEND_DOCKER_TAG, "erysimum")
                     }
                 }
             }
@@ -79,47 +78,45 @@ pipeline {
         stage("Push Docker Images to Registry") {
             steps {
                 script {
-                    docker_push("soccerize-backend-node", "${params.BACKEND_DOCKER_TAG}", "erysimum")
-                    docker_push("soccerize-frontend", "${params.FRONTEND_DOCKER_TAG}", "erysimum")
+                    docker_push("soccerize-backend-node", params.BACKEND_DOCKER_TAG, "erysimum")
+                    docker_push("soccerize-frontend", params.FRONTEND_DOCKER_TAG, "erysimum")
+                }
+            }
+        }
+
+        stage("Trigger CD Deployment") {
+            when {
+                expression { currentBuild.currentResult == 'SUCCESS' }
+            }
+            steps {
+                script {
+                    catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                        def result = build job: "Soccerize-CD", parameters: [
+                            string(name: 'FRONTEND_DOCKER_TAG', value: params.FRONTEND_DOCKER_TAG),
+                            string(name: 'BACKEND_DOCKER_TAG', value: params.BACKEND_DOCKER_TAG)
+                        ], wait: true
+
+                        echo "Triggered Soccerize-CD job with result: ${result.result}"
+                    }
                 }
             }
         }
     }
 
-   post {
-    success {
-        script {
-            def files = findFiles(glob: '*.xml')
-            if (files.length > 0) {
-                archiveArtifacts artifacts: '*.xml', followSymlinks: false
-            } else {
-                echo "No XML artifacts found to archive."
+    post {
+        success {
+            script {
+                def files = findFiles(glob: '*.xml')
+                if (files.length > 0) {
+                    archiveArtifacts artifacts: '*.xml', followSymlinks: false
+                } else {
+                    echo "No XML artifacts found to archive."
+                }
             }
         }
-    }
-    failure {
-        echo "Pipeline failed. Skipping deployment trigger."
-    }
-}
-stage('Trigger CD Deployment') {
-    when {
-        expression { currentBuild.currentResult == 'SUCCESS' }
-    }
-    steps {
-        script {
-            catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                def result = build job: "Soccerize-CD", parameters: [
-                    string(name: 'FRONTEND_DOCKER_TAG', value: "${params.FRONTEND_DOCKER_TAG}"),
-                    string(name: 'BACKEND_DOCKER_TAG', value: "${params.BACKEND_DOCKER_TAG}")
-                ], wait: true
 
-                echo "Triggered Soccerize-CD: ${result.result}"
-            }
+        failure {
+            echo "Pipeline failed. Deployment was skipped."
         }
     }
-}
-
-
-
-
 }
