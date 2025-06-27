@@ -1,0 +1,93 @@
+@Library('Shared') _
+
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'FRONTEND_DOCKER_TAG', defaultValue: '', description: 'Frontend Docker tag built by the CI job')
+        string(name: 'BACKEND_DOCKER_TAG', defaultValue: '', description: 'Backend Docker tag built by the CI job')
+    }
+
+    stages {
+        stage("Workspace Cleanup") {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage("Git: Checkout eks-deploy") {
+            steps {
+                code_checkout("https://gitlab.com/serverlessprojectgroup/soccerize.git", "eks-deploy")
+            }
+        }
+
+        stage("Verify Image Tags") {
+            steps {
+                script {
+                    echo "FRONTEND_DOCKER_TAG: ${params.FRONTEND_DOCKER_TAG}"
+                    echo "BACKEND_DOCKER_TAG: ${params.BACKEND_DOCKER_TAG}"
+                }
+            }
+        }
+
+        stage("Update Kubernetes Manifests") {
+            steps {
+                script {
+                    dir('k8s/dev') {
+                       sh "sed -i 's|erysimum/soccerize-backend-node:.*|erysimum/soccerize-backend-node:${params.BACKEND_DOCKER_TAG}|' backend-node-deployment.yml"
+                       sh "sed -i 's|erysimum/soccerize-frontend:.*|erysimum/soccerize-frontend:${params.FRONTEND_DOCKER_TAG}|' frontend-deployment.yml"
+                }
+                }
+            }
+        }
+
+        stage("Git: Commit and Push") {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'gitlab-cred', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+                    sh '''
+                    git config user.email "ci@soccerize.com"
+                    git config user.name "soccerize-ci-bot"
+                    git add k8s/dev/*.yml
+                    git commit -m "chore: updated docker tags - FE:${FRONTEND_DOCKER_TAG}, BE:${BACKEND_DOCKER_TAG}" || echo "No changes to commit"
+                    git push https://$GIT_USER:$GIT_PASS@gitlab.com/serverlessprojectgroup/soccerize.git HEAD:eks-deploy
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            script {
+                emailext(
+                    subject: " Soccerize-CD Success - ${currentBuild.fullDisplayName}",
+                    body: """
+                    <html><body>
+                    <p><b>Job:</b> ${env.JOB_NAME}</p>
+                    <p><b>Build:</b> ${env.BUILD_NUMBER}</p>
+                    <p><b>URL:</b> <a href='${env.BUILD_URL}'>${env.BUILD_URL}</a></p>
+                    </body></html>
+                    """,
+                    to: 'you@example.com',
+                    mimeType: 'text/html'
+                )
+            }
+        }
+        failure {
+            script {
+                emailext(
+                    subject: " Soccerize-CD Failed - ${currentBuild.fullDisplayName}",
+                    body: """
+                    <html><body>
+                    <p><b>Job:</b> ${env.JOB_NAME}</p>
+                    <p><b>Build:</b> ${env.BUILD_NUMBER}</p>
+                    <p>Check logs for details.</p>
+                    </body></html>
+                    """,
+                    to: 'you@example.com',
+                    mimeType: 'text/html'
+                )
+            }
+        }
+    }
+}
