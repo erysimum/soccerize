@@ -35,7 +35,7 @@ infrastructure/terraform.tfvars
 
 # ==== ENV ====
 scripts/dockerhubcreds.env
-k8s/dev/secrets/
+#k8s/dev/secrets/
 
 # ===== GENERAL =====
 .vscode/
