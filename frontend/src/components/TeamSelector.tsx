@@ -50,7 +50,7 @@ export const TeamSelector = ({ onTeamsSet }: Props) => {
             value={home}
             onChange={(e) => setHome(e.target.value)}
           >
-            <option value="">-- Select Home Team --</option>
+            <option value="">-- SELECT HOME TEAM --</option>
             {Object.entries(leagueTeams).map(([league, teams]) => (
               <optgroup key={league} label={league}>
                 {teams.map((team) => (
@@ -68,7 +68,7 @@ export const TeamSelector = ({ onTeamsSet }: Props) => {
             value={away}
             onChange={(e) => setAway(e.target.value)}
           >
-            <option value="">-- Select Away Team --</option>
+            <option value="">-- SELECT AWAY TEAM --</option>
             {Object.entries(leagueTeams).map(([league, teams]) => (
               <optgroup key={league} label={league}>
                 {teams.map((team) => (
