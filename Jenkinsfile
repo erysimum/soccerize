@@ -23,13 +23,13 @@ pipeline {
             }
         }
 
-        stage("Workspace Cleanup") {
+        stage("Clean Workspace") {
             steps {
                 cleanWs()
             }
         }
 
-        stage("Git: Checkout Soccerize") {
+        stage("Clone Soccerize Repository") {
             steps {
                 script {
                     code_checkout("git@gitlab.com:serverlessprojectgroup/soccerize.git", "eks-deploy")
@@ -37,7 +37,7 @@ pipeline {
             }
         }
 
-        stage("Trivy: Security Scan") {
+        stage("Trivy Scan") {
             steps {
                 trivy_scan()
             }
@@ -49,7 +49,7 @@ pipeline {
         //     }
         // }
 
-        stage("SonarQube: Code Analysis") {
+        stage("Static Code Analysis: SonarQube") {
             steps {
                 sonarqube_analysis("Sonar", "soccerize", "soccerize")
             }
@@ -63,7 +63,7 @@ pipeline {
 
        
 
-        stage("Docker: Build Images") {
+        stage("Docker Build: Backend & Frontend") {
             steps {
                 script {
                     dir('backend-node') {
@@ -76,7 +76,7 @@ pipeline {
             }
         }
 
-        stage("Docker: Push Images") {
+        stage("Push Docker Images to Registry") {
             steps {
                 script {
                     docker_push("soccerize-backend-node", "${params.BACKEND_DOCKER_TAG}", "erysimum")

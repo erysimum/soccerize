@@ -9,20 +9,20 @@ pipeline {
     }
 
     stages {
-        stage("Workspace Cleanup") {
+        stage("Clean Workspace") {
             steps {
                 cleanWs()
             }
         }
 
-        stage("Git: Checkout eks-deploy") {
+        stage("Git: Checkout eks-deploy Branch") {
             steps {
                 code_checkout("git@gitlab.com:serverlessprojectgroup/soccerize.git", "eks-deploy")
 
             }
         }
 
-        stage("Verify Image Tags") {
+        stage("Log Image Tag Parameters") {
             steps {
                 script {
                     echo "FRONTEND_DOCKER_TAG: ${params.FRONTEND_DOCKER_TAG}"
@@ -31,7 +31,7 @@ pipeline {
             }
         }
 
-        stage("Update Kubernetes Manifests") {
+        stage("Update Image Tags in K8s Manifests") {
             steps {
                 script {
                     dir('k8s/dev') {
@@ -42,7 +42,7 @@ pipeline {
             }
         }
 
-      stage("Git: Commit and Push") {
+      stage("Commit & Push Updated Manifests") {
     steps {
         sshagent(['gitlab-ssh']) {
             sh '''
