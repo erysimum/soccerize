@@ -87,12 +87,20 @@ pipeline {
     }
 
     post {
-        success {
-            archiveArtifacts artifacts: '*.xml', followSymlinks: false
-            build job: "Soccerize-CD", parameters: [
-                string(name: 'FRONTEND_DOCKER_TAG', value: "${params.FRONTEND_DOCKER_TAG}"),
-                string(name: 'BACKEND_DOCKER_TAG', value: "${params.BACKEND_DOCKER_TAG}")
-            ]
+    success {
+        script {
+            def files = findFiles(glob: '*.xml')
+            if (files.length > 0) {
+                archiveArtifacts artifacts: '*.xml', followSymlinks: false
+            } else {
+                echo "No XML artifacts found to archive."
+            }
         }
+        build job: "Soccerize-CD", parameters: [
+            string(name: 'FRONTEND_DOCKER_TAG', value: "${params.FRONTEND_DOCKER_TAG}"),
+            string(name: 'BACKEND_DOCKER_TAG', value: "${params.BACKEND_DOCKER_TAG}")
+        ]
     }
+}
+
 }
