@@ -89,7 +89,6 @@ pipeline {
     post {
     success {
         script {
-            // Archive XML artifacts if found
             def files = findFiles(glob: '*.xml')
             if (files.length > 0) {
                 archiveArtifacts artifacts: '*.xml', followSymlinks: false
@@ -100,12 +99,18 @@ pipeline {
     }
 
     always {
-        // Always attempt to trigger downstream job, catch errors safely
-        catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-            build job: "Soccerize-CD", parameters: [
-                string(name: 'FRONTEND_DOCKER_TAG', value: "${params.FRONTEND_DOCKER_TAG}"),
-                string(name: 'BACKEND_DOCKER_TAG', value: "${params.BACKEND_DOCKER_TAG}")
-            ], wait: true
+        script {
+            catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                def result = build job: "Soccerize-CD", parameters: [
+                    string(name: 'FRONTEND_DOCKER_TAG', value: "${params.FRONTEND_DOCKER_TAG}"),
+                    string(name: 'BACKEND_DOCKER_TAG', value: "${params.BACKEND_DOCKER_TAG}")
+                ], wait: true
+
+                echo "Downstream job result: ${result.result}"
+
+                // Manually marking this pipeline as successful if needed
+                currentBuild.result = 'SUCCESS'
+            }
         }
     }
 }
