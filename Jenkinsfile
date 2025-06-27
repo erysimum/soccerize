@@ -89,6 +89,7 @@ pipeline {
     post {
     success {
         script {
+            // Archive XML artifacts if found
             def files = findFiles(glob: '*.xml')
             if (files.length > 0) {
                 archiveArtifacts artifacts: '*.xml', followSymlinks: false
@@ -96,11 +97,19 @@ pipeline {
                 echo "No XML artifacts found to archive."
             }
         }
-        build job: "Soccerize-CD", parameters: [
-            string(name: 'FRONTEND_DOCKER_TAG', value: "${params.FRONTEND_DOCKER_TAG}"),
-            string(name: 'BACKEND_DOCKER_TAG', value: "${params.BACKEND_DOCKER_TAG}")
-        ]
+    }
+
+    always {
+        // Always attempt to trigger downstream job, catch errors safely
+        catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+            build job: "Soccerize-CD", parameters: [
+                string(name: 'FRONTEND_DOCKER_TAG', value: "${params.FRONTEND_DOCKER_TAG}"),
+                string(name: 'BACKEND_DOCKER_TAG', value: "${params.BACKEND_DOCKER_TAG}")
+            ], wait: true
+        }
     }
 }
+
+
 
 }
