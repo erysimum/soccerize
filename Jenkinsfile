@@ -32,7 +32,7 @@ pipeline {
         stage("Git: Checkout Soccerize") {
             steps {
                 script {
-                    code_checkout("https://gitlab.com/serverlessprojectgroup/soccerize.git", "eks-deploy")
+                    code_checkout("git@gitlab.com:serverlessprojectgroup/soccerize.git", "eks-deploy")
                 }
             }
         }
