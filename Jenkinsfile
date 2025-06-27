@@ -86,7 +86,7 @@ pipeline {
         }
     }
 
-    post {
+   post {
     success {
         script {
             def files = findFiles(glob: '*.xml')
@@ -97,8 +97,15 @@ pipeline {
             }
         }
     }
-
-    always {
+    failure {
+        echo "Pipeline failed. Skipping deployment trigger."
+    }
+}
+stage('Trigger CD Deployment') {
+    when {
+        expression { currentBuild.currentResult == 'SUCCESS' }
+    }
+    steps {
         script {
             catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                 def result = build job: "Soccerize-CD", parameters: [
@@ -106,14 +113,12 @@ pipeline {
                     string(name: 'BACKEND_DOCKER_TAG', value: "${params.BACKEND_DOCKER_TAG}")
                 ], wait: true
 
-                echo "Downstream job result: ${result.result}"
-
-                // Manually marking this pipeline as successful if needed
-                currentBuild.result = 'SUCCESS'
+                echo "Triggered Soccerize-CD: ${result.result}"
             }
         }
     }
 }
+
 
 
 
