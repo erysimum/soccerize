@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backend-node
-          image: erysimum/soccerize-backend-node:v1.0.0
+          image: erysimum/soccerize-backend-node:v1.0
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
