@@ -17,10 +17,7 @@ pipeline {
 
         stage("Git: Checkout eks-deploy Branch") {
             steps {
-                script {
-                    // Using SSH URL here; ensure your Jenkins has SSH keys configured in 'gitlab-ssh'
-                    code_checkout("git@gitlab.com:serverlessprojectgroup/soccerize.git", "eks-deploy")
-                }
+                code_checkout("git@gitlab.com:serverlessprojectgroup/soccerize.git", "eks-deploy")
             }
         }
 
@@ -36,12 +33,12 @@ pipeline {
         stage("Update Image Tags in K8s Manifests") {
             steps {
                 script {
-                    dir('k8s/dev') {
-                        // Replace docker tags in k8s deployment YAML files
-                        sh """
-                            sed -i 's|erysimum/soccerize-backend-node:.*|erysimum/soccerize-backend-node:${params.BACKEND_DOCKER_TAG}|' backend-node-deployment.yml
-                            sed -i 's|erysimum/soccerize-frontend:.*|erysimum/soccerize-frontend:${params.FRONTEND_DOCKER_TAG}|' frontend-deployment.yml
-                        """
+                    dir('k8s/dev/deployments') {
+                        // Optional: list files to confirm path correctness
+                        sh 'ls -la'
+
+                        sh "sed -i 's|erysimum/soccerize-backend-node:.*|erysimum/soccerize-backend-node:${params.BACKEND_DOCKER_TAG}|' backend-node-deployment.yml"
+                        sh "sed -i 's|erysimum/soccerize-frontend:.*|erysimum/soccerize-frontend:${params.FRONTEND_DOCKER_TAG}|' frontend-deployment.yml"
                     }
                 }
             }
@@ -50,16 +47,13 @@ pipeline {
         stage("Commit & Push Updated Manifests") {
             steps {
                 sshagent(['gitlab-ssh']) {
-                    script {
-                        // Configure git user, add and commit changes, then push
-                        sh """
-                            git config user.email "ci@soccerize.com"
-                            git config user.name "soccerize-ci-bot"
-                            git add k8s/dev/*.yml
-                            git commit -m "chore: updated docker tags - FE:${params.FRONTEND_DOCKER_TAG}, BE:${params.BACKEND_DOCKER_TAG}" || echo "No changes to commit"
-                            git push origin HEAD:eks-deploy
-                        """
-                    }
+                    sh '''
+                    git config user.email "ci@soccerize.com"
+                    git config user.name "soccerize-ci-bot"
+                    git add k8s/dev/deployments/*.yml
+                    git commit -m "chore: updated docker tags - FE:${FRONTEND_DOCKER_TAG}, BE:${BACKEND_DOCKER_TAG}" || echo "No changes to commit"
+                    git push git@gitlab.com:serverlessprojectgroup/soccerize.git HEAD:eks-deploy
+                    '''
                 }
             }
         }
@@ -69,13 +63,13 @@ pipeline {
         success {
             script {
                 emailext(
-                    subject: "Soccerize-CD Success - ${currentBuild.fullDisplayName}",
+                    subject: " Soccerize-CD Success - ${currentBuild.fullDisplayName}",
                     body: """
-                        <html><body>
-                        <p><b>Job:</b> ${env.JOB_NAME}</p>
-                        <p><b>Build:</b> ${env.BUILD_NUMBER}</p>
-                        <p><b>URL:</b> <a href='${env.BUILD_URL}'>${env.BUILD_URL}</a></p>
-                        </body></html>
+                    <html><body>
+                    <p><b>Job:</b> ${env.JOB_NAME}</p>
+                    <p><b>Build:</b> ${env.BUILD_NUMBER}</p>
+                    <p><b>URL:</b> <a href='${env.BUILD_URL}'>${env.BUILD_URL}</a></p>
+                    </body></html>
                     """,
                     to: 'you@example.com',
                     mimeType: 'text/html'
@@ -85,13 +79,13 @@ pipeline {
         failure {
             script {
                 emailext(
-                    subject: "Soccerize-CD Failed - ${currentBuild.fullDisplayName}",
+                    subject: " Soccerize-CD Failed - ${currentBuild.fullDisplayName}",
                     body: """
-                        <html><body>
-                        <p><b>Job:</b> ${env.JOB_NAME}</p>
-                        <p><b>Build:</b> ${env.BUILD_NUMBER}</p>
-                        <p>Check logs for details.</p>
-                        </body></html>
+                    <html><body>
+                    <p><b>Job:</b> ${env.JOB_NAME}</p>
+                    <p><b>Build:</b> ${env.BUILD_NUMBER}</p>
+                    <p>Check logs for details.</p>
+                    </body></html>
                     """,
                     to: 'you@example.com',
                     mimeType: 'text/html'
