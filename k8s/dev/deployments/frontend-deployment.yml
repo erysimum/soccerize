@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: erysimum/soccerize-frontend:v1.0
+          image: erysimum/soccerize-frontend:v2.0
           imagePullPolicy: Always
           ports:
             - containerPort: 80
