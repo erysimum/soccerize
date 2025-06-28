@@ -44,7 +44,7 @@ export const TeamSelector = ({ onTeamsSet }: Props) => {
         <h2 className="text-2xl font-bold text-center mb-4">Select Teams</h2>
 
         <div className="space-y-2">
-          <Label> {'\u{1F3E0}'}Home Team</Label>
+          <Label> {'\u{1F3E0}'}HOME TEAM</Label>
           <select
             className="w-full p-2 rounded bg-neutral-700 text-white"
             value={home}
@@ -62,7 +62,7 @@ export const TeamSelector = ({ onTeamsSet }: Props) => {
         </div>
 
         <div className="space-y-2">
-          <Label>{'\u2708\uFE0F'} Away Team</Label>
+          <Label>{'\u2708\uFE0F'} AWAY TEAM</Label>
           <select
             className="w-full p-2 rounded bg-neutral-700 text-white"
             value={away}
