@@ -59,7 +59,12 @@ exports.handler = async (event) => {
     } catch (error) {
       console.error(" Error processing record:", record, error);
       results.push({ status: "error", error: error.message });
+      hasFailure = true;
     }
+  }
+  if (hasFailure) {
+    // Forcing Lambda to fail → triggers retry or DLQ
+    throw new Error("One or more records failed to process.");
   }
 
   console.log(" Final Results:", JSON.stringify(results));
