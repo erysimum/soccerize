@@ -1019,7 +1019,7 @@ This guide explains how to set up two Jenkins pipelines:
   - SCM: `Git`
   - **Repository URL:** `<your GitLab repository URL>`
   - **Credentials:** `<your GitLab PAT credential>`
-  - **Branch Specifier:** `*/eks-deploy`
+  - **Branch Specifier:** `eks-deploy`
   - **Script Path:** `Jenkinsfile`
 ##### Build Trigger (Optional)
 -  Check: `Trigger builds remotely`
@@ -1062,7 +1062,7 @@ This guide explains how to set up two Jenkins pipelines:
 ## Summary
 
 - `Soccerize-CI` points to the root-level `Jenkinsfile`
-- `Soccerize-CD` points to `Gitops/Jenkinsfile`
+- `Soccerize-CD` points to `GitOps/Jenkinsfile`
 - Both pipelines are configured to discard old builds and can be triggered remotely
 
 Now just write the corresponding pipeline code in each `Jenkinsfile`, and you're good to go!
