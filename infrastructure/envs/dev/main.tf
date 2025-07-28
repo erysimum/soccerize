@@ -39,5 +39,5 @@ module "ec2" {
   public_key_path = "${path.module}/../../../terra-key.pub"
   my_vpc_id           = module.vpc.vpc_id #vpc_id is passed to SG
   my_subnet_id        = module.vpc.public_subnets[0] #grabbing the 1st public subnets from module vpc  where we are launching our instance
-  ingress_ports    = [22, 80, 443, 30000, 32767, 465, 9000, 3000,5000, 6443, 25]
+  ingress_ports    = [22, 80, 443, 8080, 8081,30000, 32767, 465, 9000, 3000,9090,5000, 6443, 25]
 }
