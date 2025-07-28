@@ -18,12 +18,14 @@ Soccerize Football is full-stack, event-driven real-time football simulation app
 - [License](#-license)
 
 
+
 ## About
 Soccerize is a real-time football commentary and scoring app powered by:
 -  WebSocket (AWS API Gateway)
 -  AWS SQS + Lambda + DynamoDB Streams
 -  CI/CD with Jenkins, GitLab, ArgoCD
 -  Kubernetes (KIND/EKS)
+
 
 
 ## Architecture
@@ -41,7 +43,9 @@ This diagram shows how the React frontend, Node.js backend, AWS services, and th
 [![Click to Zoom - App + CI/CD Flow](./assets/football_commentary_architecture.png)](./assets/football_commentary_architecture.png)
 
 
+
 ## Tech Stack
+
 ###  Frontend
 - **React.js (Vite)** – Uses React with Vite
 - **WebSocket Client** – On load of frontend, auto-connects to WedSocket API for real-time commentary
@@ -50,6 +54,7 @@ This diagram shows how the React frontend, Node.js backend, AWS services, and th
 ###  Backend
 - **Node.js + Express.js** – Handles API endpoints for goals/cards events and sends events to AWS SQS
 - **AWS SDK (v3)** – Publishes messages and interacts with AWS services programmatically
+
 
 ### AWS Services
 - **Amazon SQS** – Buffers real-time football events before processing
@@ -60,14 +65,17 @@ This diagram shows how the React frontend, Node.js backend, AWS services, and th
 - **DynamoDB Streams** – Emits changes to trigger the Broadcaster Lambda
 - **API Gateway (WebSocket)** – Pushes commentary to all connected frontend clients in real time
 
+
 ### Containerization
 - **Docker** – Containerizes all services (frontend and backend) for consistent builds
 - **Docker Compose** – *(Optional for local testing)* Spins up multi-container environments
+
 
 ### Kubernetes (K8s)
 - **Amazon EKS** – Cluster provisioned via `eksctl` with managed node groups in private subnets
 - **Ingress Controller (ALB)** – Routes external traffic to internal services securely
 - **ConfigMaps & Secrets** – Injects runtime variables and credentials securely into pods
+
 
 
 ### CI/CD Pipeline
@@ -82,6 +90,7 @@ This diagram shows how the React frontend, Node.js backend, AWS services, and th
   - Commits and Pushes back to GitLab (GitOps)
 - **ArgoCD** – Setup ArgoCD server, creates an application, watches the Git repo and syncs updated manifests  to EKS cluster
 
+
 ###  Monitoring & Alerts
 - **Prometheus** – Collects metrics from Pods, Nodes, and Services
 - **Grafana** – Visual dashboards for observability
@@ -90,7 +99,6 @@ This diagram shows how the React frontend, Node.js backend, AWS services, and th
 
 
 ##  CI/CD Pipeline
-
 Fully automated workflow powered by GitLab, Jenkins, ArgoCD, and GitOps best practices. 
 ![Jenkins CD Pipeline](./assets/JenkinsCICD.png)
 
@@ -215,6 +223,7 @@ ssh -i ~/projects/soccerize/key-name ubuntu@<BASTION_PUBLIC_IP>
 ###  Step 4: Install Required Tools (Locally) on your EC2 
 To interact with AWS, deploy apps, and run containers — make sure the following tools are installed on your local machine (Ubuntu/Linux).
 
+
 #### Update and Install Essentials
 ```bash
 sudo apt update && sudo apt upgrade -y
@@ -232,6 +241,7 @@ sudo usermod -aG docker $USER && newgrp docker
 ```bash
 docker ps
 ```
+
 
 #### Install AWS CLI
 The AWS CLI is required to authenticate and interact with AWS resources from your local terminal.
@@ -254,6 +264,7 @@ aws configure
 Provide your AWS Access Key ID, AWS Secret Access Key, Default Region, and Output format.
 
 
+
 ####  Install `kubectl` (Kubernetes CLI)
 `kubectl` is the command-line tool used to interact with your Kubernetes clusters.
 ##### Install `kubectl` (Linux)
@@ -267,6 +278,8 @@ sudo mv kubectl /usr/local/bin/
 kubectl version
 ```
 
+
+
 #### Install `eksctl` (Amazon EKS CLI)
 `eksctl` is the official CLI tool for managing Amazon EKS clusters. We'll use it to create and configure our Kubernetes cluster in AWS.
 ##### Install `eksctl` (Linux)
@@ -279,6 +292,8 @@ sudo mv /tmp/eksctl /usr/local/bin
 ```bash
 eksctl version
 ```
+
+
 
 ### Create EKS Cluster from Bastion (via GitLab)
 We'll create the EKS cluster from our **Bastion EC2 instance** using configuration files stored in a  GitLab repository.So far, we’ve generated but not pushed `cluster-config.yml` and `nodegroup-config.yml`. First, push those files to your GitLab repo before proceeding.
@@ -316,6 +331,7 @@ git branch
  ├── cluster-config.yml
  └── nodegroup-config.yml
 
+
 #### Create the EKS Cluster
 ```bash 
 cd eks-cluster
@@ -329,6 +345,8 @@ kubectl version
 **If you see this error:**
  Unable to connect to the server: dial tcp ... i/o timeout
 **It means the Bastion cannot reach the EKS control plane (port 443 is blocked).**
+
+
 
 **Fix Security Group Ingress from Bastion to EKS Cluster SG**
 ```bash
@@ -369,6 +387,7 @@ kubectl get svc
 
 
 
+
 ### Create NodeGroup from Bastion
 - Provisions worker nodes based on your nodegroup-config.yml
 ```bash
@@ -382,11 +401,13 @@ kubectl get nodes
 - Provisions two worker nodesacross two  AZ's inside  private subnets.
 
 
+
 ### Install AWS  Load Balancer Controller
 #### Step1: Associate Your AWS Account With OIDC Provider
 ```bash
 eksctl utils associate-iam-oidc-provider --region <DEFAULT-REGION> --cluster <CLUSTER-NAME>> --approve
 ```
+
 
 #### Step2: Download the AWS ALB IAM Policy
 ```bash
@@ -411,10 +432,12 @@ eksctl create iamserviceaccount \
   --approve
 ```
 
+
 #### Step5: Install Helm
 ```bash
 curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 ```
+
 
 #### Step6:  Add EKS Helm Chart Repo
 ```bash
@@ -467,17 +490,6 @@ kubectl get ingress -n soccerize-app
 
 
 
-
-
-
-
-
-
-
-
-
-
-
  
 
 ---
@@ -497,6 +509,7 @@ sudo systemctl enable docker
 ```bash
 sudo apt install -y openjdk-17-jre
 ```
+
 #### Add Jenkins Repo and Install
 ```bash
 curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo tee \
@@ -506,6 +519,8 @@ echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
   https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
   /etc/apt/sources.list.d/jenkins.list > /dev/null
 
+
+
 sudo apt update
 sudo apt install jenkins -y
 
@@ -513,8 +528,10 @@ sudo apt install jenkins -y
 sudo systemctl start jenkins
 sudo systemctl enable jenkins
 
+
 #Check Status
 sudo systemctl status jenkins
+
 
 #Access Jenkins
  http://<EC2-PUBLIC-IP>:8080
@@ -528,6 +545,8 @@ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 sudo apt update
 sudo apt install -y wget apt-transport-https gnupg lsb-release
 ```
+
+
 #### Add Trivy APT Repo and GPG Key
 ```bash
 wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | \
@@ -538,6 +557,8 @@ echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] \
   $(lsb_release -cs) main" | \
   sudo tee /etc/apt/sources.list.d/trivy.list > /dev/null
 ```
+
+
 #### Install Trivy
 ```bash
 sudo apt update
@@ -547,6 +568,7 @@ sudo apt install -y trivy
 ```bash
 trivy --version
 ```
+
 
 
 ### Run SonarQube  in Docker
@@ -565,11 +587,13 @@ docker run -itd \
 docker ps
 ```
 
+
 #### Access SonarQube Web UI
 ```bash
 http://<EC2-PUBLIC-IP>:9000
 #Default login Username admin Password admin
 ```
+
 
 ### Install OWASP & DevSecOps Plugins on Jenkins
 1. Go to **Jenkins Dashboard → Manage Jenkins → Plugin Manager → Available Plugins**
@@ -621,15 +645,13 @@ This section explains how to securely integrate Jenkins with SonarQube for stati
 
 1. Navigate to:  
    **Manage Jenkins → Global Tool Configuration**
-
 2. Scroll down to **SonarQube Scanner** section.
-
 3. Configure the tool:
-
    - **Name:** `SonarScanner`  
    - Check **Install automatically**
 
 ---
+
 
 #### Step 4: Add SonarQube Server to Jenkins
 
@@ -670,6 +692,7 @@ This section explains how to integrate GitLab with Jenkins
 
 ---
 
+
 #### Step 1: Create Personal Access Token in GitLab
 
 1. Login to your GitLab account.
@@ -698,6 +721,7 @@ This section explains how to integrate GitLab with Jenkins
 4. Click **OK** to save.
 
 ---
+
 
 #### Step 3: Connect GitLab with Jenkins
 Follow the steps below to integrate GitLab with Jenkins:
@@ -826,6 +850,8 @@ argocd cluster list
  SERVER                         NAME        STATUS      MESSAGE
 https://kubernetes.default.svc in-cluster  Successful  cluster has no application and is not monitored
 
+
+
 #### Step 1: Create a New Argo CD Application
 To get started with deploying your Kubernetes resources using Argo CD, you need to create a new application.
 Follow these steps:
@@ -834,6 +860,8 @@ Follow these steps:
    (Ensure you have an SSH port-forward session running)
 2. On the Argo CD dashboard, click on the **`+ NEW APP`** button in the top menu.
 3. Proceed to configure the application with the necessary Git repository, destination cluster, sync policy, and other details.
+
+
 #### Application Configuration
 After clicking **NEW APP** in the Argo CD UI, fill out the form with the following details:
 
@@ -847,12 +875,16 @@ After clicking **NEW APP** in the Argo CD UI, fill out the form with the followi
 - ` SELF HEAL`
 - ` AUTO-CREATE NAMESPACE`
 
+
+
 #### Git Repository
 Provide the following Git details in the application configuration form:
 
 - **Repository URL:** `<your-gitlab-repo>`
 - **Revision (Branch):** `<your-brachname>`
 - **Path:** `k8s/dev<place-where-manifests-live>`
+
+
 
 #### Destination Cluster Configuration
 In the **New Application** setup screen of Argo CD, under the **Destination** section, configure the following:
@@ -887,11 +919,13 @@ Your Jenkins pipeline can now use this shared library for deployments.
 This guide explains how to create and use a **Jenkins Shared Library** repository hosted on GitLab for reusable pipeline code.
 ---
 
+
 #### 1. Create the GitLab Repository
 - Create a new repository in GitLab named `jenkins-shared-lib`.
 - Initialize it with a README (optional).
 
 ---
+
 
 #### 2. Clone the Repository Locally
 
@@ -914,6 +948,7 @@ git commit -m "Add reusable pipeline scripts for eks-deploy"
 git push origin eks-deploy
 ```
 
+
 #### 4. Usage in Pipeline
 At the top of your Jenkins pipeline script, include the shared library by adding:
 ```bash
@@ -932,6 +967,7 @@ steps #{
 ### Docker Hub Token Setup in Jenkins
 To enable Jenkins to authenticate with Docker Hub, add your Docker Hub credentials as follows:
 ---
+
 #### Steps to Add Docker Hub Credentials
 1. Navigate to **Manage Jenkins** → **Credentials**.
 2. Add new credentials with the following details:
@@ -951,6 +987,8 @@ This guide explains how to set up two Jenkins pipelines:
 -  **Soccerize-CI** – Continuous Integration
 -  **Soccerize-CD** – Continuous Deployment
 ---
+
+
 #### Soccerize-CI Pipeline Setup
 ##### Create New Item
 1. Go to Jenkins → **New Item**
@@ -963,6 +1001,7 @@ This guide explains how to set up two Jenkins pipelines:
   - Days to keep builds: `1`
   - Max builds to keep: `2`
 
+
 ##### This Project is Parameterized
 
 - Check: `This project is parameterized`
@@ -973,6 +1012,7 @@ This guide explains how to set up two Jenkins pipelines:
 
 ##### GitLab Configuration
 - **GitLab Connection:** Select `gitlab` from the dropdown (must be configured in Jenkins system config)
+
 
 ##### Source Control
 - **Definition:** `Pipeline script from SCM`
@@ -1002,6 +1042,8 @@ This guide explains how to set up two Jenkins pipelines:
 
 ##### GitLab Configuration
 - **GitLab Connection:** Select `gitlab` from the dropdown
+
+
 ##### Source Control
 - **Definition:** `Pipeline script from SCM`
   - SCM: `Git`
@@ -1009,6 +1051,8 @@ This guide explains how to set up two Jenkins pipelines:
   - **Credentials:** `<your GitLab PAT credential>`
   - **Branch Specifier:** `*/eks-deploy`
   - **Script Path:** `GitOps/Jenkinsfile`
+
+
 ##### Build Trigger (Optional)
 - Check: `Trigger builds remotely`
   - Authentication Token: `soccerize-ci-token`
@@ -1022,6 +1066,9 @@ This guide explains how to set up two Jenkins pipelines:
 - Both pipelines are configured to discard old builds and can be triggered remotely
 
 Now just write the corresponding pipeline code in each `Jenkinsfile`, and you're good to go!
+
+
+
 
 
 ### Kubernetes Monitoring with Prometheus & Grafana using Helm
