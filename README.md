@@ -6,7 +6,7 @@ Soccerize Football is full-stack, event-driven real-time football simulation app
 ## Home page UI
 ![Home 1](./assets/soccerize-home1.png)
 ### Scoreboard View
-![Scoreboard](./assets/soccerize.PNG)
+![Scoreboard](./assets/soccerize-home2.png)
 
 
 ##  Table of Contents
