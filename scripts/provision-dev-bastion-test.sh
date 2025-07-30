@@ -5,7 +5,7 @@ set -e
 echo " Switching to Terraform env"
 cd "$(dirname "$0")/../infrastructure/envs/dev"
 
-echo "📤 Fetching Terraform outputs..."
+echo " Fetching Terraform outputs..."
 export vpc_id=$(terraform output -raw vpc_id)
 export subnet_a=$(terraform output -json private_subnets | jq -r '.[0]')
 export subnet_b=$(terraform output -json private_subnets | jq -r '.[1]')

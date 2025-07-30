@@ -1,6 +1,9 @@
 # Soccerize - Realtime football commentary app
 Soccerize Football is full-stack, event-driven real-time football simulation app supporting real-time  goals, cards (yellow or red), and commentary powered by AWS services- Simple Queue Service(SQS), Lambda, DynamoDB, DynamoDB Stream, WebSocket APIs, along with Express Server and React with Vite.
 
+[![Watch Demo](https://img.youtube.com/vi/A6bb5Q3kGd0/0.jpg)](https://www.youtube.com/watch?v=A6bb5Q3kGd0)
+
+
 
 # Screenshots
 ## Home page UI
@@ -10,12 +13,12 @@ Soccerize Football is full-stack, event-driven real-time football simulation app
 
 
 ##  Table of Contents
-- [About](#-about)
-- [Architecture](#-architecture)
-- [Tech Stack](#-tech-stack)
-- [CI/CD Pipeline](#-cicd-pipeline)
-- [Getting Started](#-getting-started)
-- [License](#-license)
+- [About](#about)
+- [Architecture](#architecture)
+- [Tech Stack](#tech-stack)
+- [CI/CD Pipeline](#cicd-pipeline)
+- [Getting Started](#getting-started)
+- [License](#license)
 
 
 
@@ -24,7 +27,7 @@ Soccerize is a real-time football commentary and scoring app powered by:
 -  WebSocket (AWS API Gateway)
 -  AWS SQS + Lambda + DynamoDB Streams
 -  CI/CD with Jenkins, GitLab, ArgoCD
--  Kubernetes (KIND/EKS)
+-  Kubernetes (KIND - in kind-cluster branch/EKS in eks-deploy branch)
 
 
 
@@ -82,7 +85,7 @@ This diagram shows how the React frontend, Node.js backend, AWS services, and th
 - **GitLab** – Source control with branches: `dev`, `kind-cluster`, and `eks-deploy`
 - **Jenkins CI** – 
   - Pulls code on push to `eks-deploy` branch
-  - Runs SonarQube for code quality and Trivy for image security (DevSecOps)
+  - Runs SonarQube for code quality and Trivy for files scanning (DevSecOps)
   - Builds and tags Docker images through passed parameters
   - Pushes images to Docker Hub
 - **Jenkins CD** – 
@@ -104,7 +107,7 @@ Fully automated workflow powered by GitLab, Jenkins, ArgoCD, and GitOps best pra
 
 ###  1. Developer Pushes Code
 - Developer pushes to the `eks-deploy` branch in **GitLab**
-- Passes IMAGE TAG VERSION as a parameter, GitLab triggers the **Jenkins CI** pipeline
+- Developer manually triggers the **Jenkins CI** pipeline by passing the frontend and backend image tag as parameters.
 
 ###  2. Jenkins CI Job
 - **Clones the repository**
@@ -175,7 +178,7 @@ terraform apply
 
  ###  Step 3: Provision Network and Bastion Host
  **Location:** `~/projects/soccerize/scripts/provision-dev-bastion.sh` (Local state file used here)
- Instead of running Terraform manually, I use a **script to automate provisioning** and extract outputs like VPC ID, subnets, and Bastion IP.
+ Instead of running Terraform manually, I have used a **script to automate provisioning** and extract outputs like VPC ID, subnets, and Bastion IP.
  ```bash
 cd ~/projects/soccerize/infrastructure/envs/dev
 terraform init
@@ -220,8 +223,7 @@ To connect to the Bastion from your local machine:
 ssh -i ~/projects/soccerize/key-name ubuntu@<BASTION_PUBLIC_IP>  
 ```
 
-###  Step 4: Install Required Tools (Locally) on your EC2 
-To interact with AWS, deploy apps, and run containers — make sure the following tools are installed on your local machine (Ubuntu/Linux).
+###  Step 4: Install Required Tools (Locally) on your EC2
 
 
 #### Update and Install Essentials
@@ -379,7 +381,7 @@ aws eks update-kubeconfig --name <CLUSTER-NAME> --region <DEFAULT-REGION>
 
 
 #### Step 6: Verify Kubernetes Default Services
-Run the following to list all services running in the default namespace:
+Run the following command to list all services running in the default namespace:
 ```bash
 kubectl get svc
 ```
@@ -606,7 +608,7 @@ http://<EC2-PUBLIC-IP>:9000
 
 
 ### Integrate Jenkins with SonarQube (DevSecOps Style)
-This section explains how to securely integrate Jenkins with SonarQube for static code analysis as part of your CI/CD pipeline.
+This section explains how to securely integrate Jenkins with SonarQube for the code analysis as part of CI/CD pipeline.
 
 ---
 
@@ -623,7 +625,7 @@ This section explains how to securely integrate Jenkins with SonarQube for stati
    - **Name:** `jenkins-token` (or any name of your choice)
 
 4. Copy the token and save it temporarily.  
-   *You won’t be able to see it again later.*
+   *we won’t be able to see it again later.*
 
 ---
 
@@ -703,7 +705,7 @@ This section explains how to integrate GitLab with Jenkins
    - **Scopes:**  `read_repository`,  `write_repository`,  `api`
 4. Click **Create Personal Access Token**.
 5. **Copy and store the token securely.**  
-   *You won’t be able to see it again once you leave the page.*
+   *we won’t be able to see it again once we leave the page.*
 
 ---
 
@@ -745,7 +747,7 @@ Follow the steps below to integrate GitLab with Jenkins:
 4. Click **Test Connection** to verify the setup.
 5. Finally, click **Save**.
 ---
-Your Jenkins instance is now connected to GitLab and ready for GitOps or CI/CD integrations.
+
 
 
 ---
@@ -753,11 +755,11 @@ Your Jenkins instance is now connected to GitLab and ready for GitOps or CI/CD i
 
 ### Install and Configure Argo CD on EC2 (Master Machine)
 
-This guide walks you through:
+This section explains:
 
-- Installing Argo CD on your EKS cluster  
+- Installing Argo CD on our EKS cluster  
 - Accessing Argo CD UI securely via browser  
-- Connecting your GitLab repository for GitOps workflows  
+- Connecting  GitLab repository for GitOps operations  
 
 ---
 
@@ -840,7 +842,7 @@ Inside the Argo CD UI:
 
 
 ### Deploy Application to Argo CD
-This guide walks you through creating an **Argo CD Application** that connects to your GitLab repository and deploys resources from a specific path and branch.
+This section describes the process of creating an **Argo CD Application** that syncs with your Gitlab repository and deploys a manifest from a specific path ie `k8s/dev` and branch `eks-deploy` in EKS Cluster 
 ---
 #### Prerequisite: Argo CD Cluster Connected
 Check connected clusters using:
@@ -853,13 +855,13 @@ https://kubernetes.default.svc in-cluster  Successful  cluster has no applicatio
 
 
 #### Step 1: Create a New Argo CD Application
-To get started with deploying your Kubernetes resources using Argo CD, you need to create a new application.
+
 Follow these steps:
 1. Open your browser and go to the Argo CD UI  
-   > Usually accessible via: `http://localhost:8080` 
+   > Usually accessible via: `http://localhost:8080`
    (Ensure you have an SSH port-forward session running)
 2. On the Argo CD dashboard, click on the **`+ NEW APP`** button in the top menu.
-3. Proceed to configure the application with the necessary Git repository, destination cluster, sync policy, and other details.
+
 
 
 #### Application Configuration
@@ -869,7 +871,7 @@ After clicking **NEW APP** in the Argo CD UI, fill out the form with the followi
 - **Project Name:** `default`
 - **Sync Policy:** Select `Automatic`
 
- Enable the following options by checking the checkboxes:
+ Tick these boxes:
 
 - ` PRUNE RESOURCES`
 - ` SELF HEAL`
@@ -878,7 +880,7 @@ After clicking **NEW APP** in the Argo CD UI, fill out the form with the followi
 
 
 #### Git Repository
-Provide the following Git details in the application configuration form:
+Provide the following Git details in the application form:
 
 - **Repository URL:** `<your-gitlab-repo>`
 - **Revision (Branch):** `<your-brachname>`
@@ -887,7 +889,6 @@ Provide the following Git details in the application configuration form:
 
 
 #### Destination Cluster Configuration
-In the **New Application** setup screen of Argo CD, under the **Destination** section, configure the following:
 
 - **Cluster URL:** `https://kubernetes.default.svc`
 - **Namespace:** `<your-namespace-of-soccerizeapp>`
@@ -901,7 +902,7 @@ In the **New Application** setup screen of Argo CD, under the **Destination** se
 
 
 ### Jenkins Shared Library Setup
-Follow these steps to configure the Shared Library in Jenkins for your pipeline:
+ To configure the Shared Library in Jenkins for your pipeline:
 
 1. Go to **Manage Jenkins** → **System**.
 2. Search for **Global Trusted Pipeline Libraries**.
@@ -1011,7 +1012,8 @@ This guide explains how to set up two Jenkins pipelines:
 
 
 ##### GitLab Configuration
-- **GitLab Connection:** Select `gitlab` from the dropdown (must be configured in Jenkins system config)
+- **GitLab Connection:** Select `gitlab` from the dropdown (must be configured in Jenkins system config, if not
+then you need to install Gitlab Pluggins)
 
 
 ##### Source Control
@@ -1063,9 +1065,7 @@ This guide explains how to set up two Jenkins pipelines:
 
 - `Soccerize-CI` points to the root-level `Jenkinsfile`
 - `Soccerize-CD` points to `GitOps/Jenkinsfile`
-- Both pipelines are configured to discard old builds and can be triggered remotely
-
-Now just write the corresponding pipeline code in each `Jenkinsfile`, and you're good to go!
+Now we need to  write the corresponding pipeline code in each `Jenkinsfile`
 
 
 
